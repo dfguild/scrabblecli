@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>Choose Letter for Blank</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Select an option</mat-label>
+    <mat-select [(value)]="data.letter">
+      <mat-option>None</mat-option>
+      <mat-option value="A">A</mat-option>
+      <mat-option value="B">B</mat-option>
+      <mat-option value="C">C</mat-option>
+      <mat-option value="D">D</mat-option>
+      <mat-option value="E">E</mat-option>
+      <mat-option value="F">F</mat-option>
+      <mat-option value="G">G</mat-option>
+      <mat-option value="H">H</mat-option>
+      <mat-option value="I">I</mat-option>
+      <mat-option value="J">J</mat-option>
+      <mat-option value="K">K</mat-option>
+      <mat-option value="L">L</mat-option>
+      <mat-option value="M">M</mat-option>
+      <mat-option value="N">N</mat-option>
+      <mat-option value="O">O</mat-option>
+      <mat-option value="P">P</mat-option>
+      <mat-option value="Q">Q</mat-option>
+      <mat-option value="R">R</mat-option>
+      <mat-option value="S">S</mat-option>
+      <mat-option value="T">T</mat-option>
+      <mat-option value="U">U</mat-option>
+      <mat-option value="V">V</mat-option>
+      <mat-option value="W">W</mat-option>
+      <mat-option value="X">X</mat-option>
+      <mat-option value="Y">Y</mat-option>
+      <mat-option value="Z">Z</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.letter" cdkFocusInitial>Ok</button>
+</div>

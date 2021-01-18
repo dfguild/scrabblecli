@@ -1,0 +1,25 @@
+mat-card {
+  width: 285px;
+}
+
+.order {
+  width: 20%;
+}
+
+.name {
+  width: 50%;
+}
+
+.score {
+  width: 30%;
+  text-align: right;
+}
+
+.turn {
+  font-weight: bold;
+}
+
+.winner {
+  font-weight: bold;
+  background-color: royalblue;
+}

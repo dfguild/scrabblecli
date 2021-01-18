@@ -1,0 +1,29 @@
+<div class="container" *ngIf="loading; else loaded">
+  <app-loading></app-loading>
+</div>
+
+<ng-template #loaded>
+  <div class="board">
+    <ng-container *ngFor="let row of gridSquares">
+      <ng-container *ngFor="let square of row">
+        <div cdkDropList
+        class="boarddrop"
+        [cdkDropListData]="'BD' + square.row + ',' + square.col"
+        [cdkDropListSortingDisabled]="true"
+        [cdkDropListDisabled]="!myTurn"
+        (cdkDropListDropped)="dropped($event)">
+          <div [ngClass]="square.sqClasses" cdkDrag [cdkDragData]="'BD' + square.row + ',' + square.col"
+            [cdkDragDisabled]="!square.isTile || square.isScored">
+            <span class="letter">
+              {{square.mainText}}
+            </span>
+            <span class="footer" *ngIf="square.isTile">
+              {{square.letterValue.toString()}}
+            </span>
+            <div *cdkDragPlaceholder></div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>

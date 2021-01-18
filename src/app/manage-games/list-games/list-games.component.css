@@ -1,0 +1,36 @@
+.headings span {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: .8rem;
+  font-weight: bolder;
+}
+
+.id {
+  width: 10%;
+}
+
+.name {
+  width: 20%;
+}
+
+.players {
+  width: 40%;
+}
+
+.turn {
+  width: 10%;
+  text-align: center;
+}
+
+.actionJoin {
+  width: 10%;
+  text-align: center;
+}
+
+.actionStart {
+  width: 10%;
+  text-align: center;
+}

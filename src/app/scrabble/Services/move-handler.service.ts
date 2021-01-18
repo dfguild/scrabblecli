@@ -1,0 +1,205 @@
+import { Injectable } from '@angular/core';
+import { GameService } from './game.service';
+import { Square } from './Square';
+import WordList from '../../../assets/words_dictionary.json';
+
+enum DIR {
+  H,
+  V
+}
+
+const H_PRIOR = [0,-1];
+const H_AFTER = [0,1];
+const V_PRIOR = [-1,0];
+const V_AFTER = [1,0];
+
+interface Word {
+  text: string;
+  squares: Square[];
+  score: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MoveHandlerService {
+
+  mvDir: DIR = DIR.H;
+  words: Word[] = [];
+  gm!: GameService;
+  mvStart!: Square;
+  mvEnd!: Square;
+  validWords: string[] = [];
+
+  constructor() {}
+
+  setGameService(gm: GameService): void {
+    this.gm = gm;
+  }
+
+  commitMove(): void{
+    for ( let s of this.gm.currentMove ) {
+      s.isScored = true;
+    }
+    this.gm.currentMove=[];
+    this.words=[];
+  }
+
+  processMove(): number {
+    this.words = [];
+    if ( this.gm.currentMove.length === 0 ) return 0; // handle pass
+    if (this.gm.turnState.turn === 0 && !this.gm.grid[7][7].isTile) {
+      throw('Invalid First Move: Must play using center square');
+    }
+    this.setMoveDirection();
+    this.sortMove();
+    this.isMoveContiguous();
+    this.findWords();
+    this.checkWords();
+
+    console.log(`MoveHandler:processMove - found words: ${this.words.join()}`);
+    return this.words.map(o=>o.score).reduce( (a, b) => a+b);
+  }
+
+  private setMoveDirection(): void {
+    if (this.gm.currentMove.length === 1) {
+      this.mvDir = DIR.H;
+    } else if (this.gm.currentMove[0].row === this.gm.currentMove[1].row) {
+      this.mvDir = DIR.H
+      if(!this.gm.currentMove.every(s => s.row === this.gm.currentMove[0].row)) {
+        this.gm.currentMove.map(s => console.log(`Thinks invalid Horiz move with ${s.letter} ${s.row} ${s.col}`))
+        throw new Error('Invalid Move: Tiles must be in a line')
+      };
+    } else if ( this.gm.currentMove[0].col === this.gm.currentMove[1].col) {
+      this.mvDir = DIR.V;
+      if(!this.gm.currentMove.every(s => s.col === this.gm.currentMove[0].col)) {
+        throw new Error('Invalid Move: Tiles must be in a line')
+      };
+    } else {
+      throw new Error('Invalid Move');
+    }
+  }
+
+  private isMoveContiguous(): void {
+    const moveSize = this.gm.currentMove.length;
+    if ( moveSize === 1) return;
+    if (this.mvDir === DIR.H) {
+      for (let i = this.mvStart.col; i <= this.mvEnd.col; i++) {
+        if (! this.gm.grid[this.mvStart.row][i].isTile) throw new Error('Non-contiguous Move');
+      }
+    } else {
+      for (let i = this.mvStart.row; i <= this.mvEnd.row; i++) {
+        if (! this.gm.grid[i][this.mvStart.col].isTile) throw new Error('Non-contiguous Move');
+      }
+    }
+  }
+
+  private sortMove(): void {
+    if (this.gm.currentMove.length != 1) {
+      if (this.mvDir === DIR.H) {
+        this.gm.currentMove.sort((a,b) => a.col - b.col);
+      } else {
+        this.gm.currentMove.sort((a,b) => a.row - b.row);
+      }
+    }
+    this.mvStart = this.gm.currentMove[0];
+    this.mvEnd = this.gm.currentMove[this.gm.currentMove.length - 1];
+  }
+
+  findWords() {
+    let word = this.findWord(this.mvStart, this.mvDir);
+    if (word) this.words.push(word);
+
+    let dir = this.mvDir == DIR.H ? DIR.V : DIR.H; //look crosswise
+    for (let s of this.gm.currentMove) {
+      word = this.findWord(s, dir);
+      if (word) this.words.push(word);
+    }
+  }
+
+  findWord(s: Square, dir: DIR): Word | undefined {
+
+    let start = this.findStart(s, dir);
+    let end = this.findEnd(s, dir);
+
+    //One letter word -- return nothing
+    if (start == end) {
+      return undefined;
+    }
+    return this.getWord(start, end);
+  }
+
+  private findStart(s: Square, dir: DIR ): Square {
+    let row = s.row; let col = s.col;
+    let priorRow: number; let priorCol: number;
+    do {
+      priorRow = row;
+      priorCol = col;
+      row += dir === DIR.H ? H_PRIOR[0] : V_PRIOR[0];
+      col += dir === DIR.H ? H_PRIOR[1] : V_PRIOR[1];
+    } while ( (row >= 0) && (col >=0) && this.gm.grid[row][col].isTile );
+    return this.gm.grid[priorRow][priorCol];
+  }
+
+  private scoreWord(word: Word): Word {
+    let wordBonusMultiplier = 1;
+
+    for ( let s of word.squares ) {
+      let sqScore = s.letterValue;
+      if (!s.isScored) {
+        const multiplier = s.squareValue;
+        wordBonusMultiplier *= multiplier.wordMultiplier;
+        sqScore *= multiplier.letterMultiplier;
+      }
+      console.log(`MoveHandler:scoreWord - adding ${sqScore} to ${word.score}`)
+      word.score += sqScore;
+    }
+    console.log(`MoveHandler:scoreWord - multiplying ${word.score} by ${wordBonusMultiplier}`)
+    word.score *= wordBonusMultiplier;
+    word.score += (this.gm.currentMove.length === 7) ? 50 : 0;
+    return word;
+  }
+
+  private findEnd(s: Square, dir: DIR ): Square {
+    let row = s.row; let col = s.col;
+    let priorRow: number; let priorCol: number;
+    do {
+      priorRow = row;
+      priorCol = col;
+      row += dir === DIR.H ? H_AFTER[0] : V_AFTER[0];
+      col += dir === DIR.H ? H_AFTER[1] : V_AFTER[1];
+    } while ( (row <= 14) && (col <= 14) && this.gm.grid[row][col].isTile );
+    return this.gm.grid[priorRow][priorCol];
+  }
+
+  private getWord(start: Square, end: Square): Word {
+    let word: Word = {text: '', squares: [], score: 0};
+    if ( start.row === end.row ) {
+      //Horizontal word
+      for ( let s of this.gm.grid[start.row].slice(start.col, end.col+1)) {
+        word.squares.push(s);
+        word.text += s.mainText;
+      }
+    } else {
+      //vertical word
+      for (let i = start.row; i <= end.row; i++) {
+        word.squares.push(this.gm.grid[i][start.col]);
+        word.text += this.gm.grid[i][start.col].mainText;
+      }
+    }
+    return this.scoreWord(word);
+  }
+
+  checkWords(): void {
+    let invalidWords: string[] = [];
+    if (this.words.length === 0) { throw new Error('No valid words played')};
+    for ( let w of this.words) {
+      console.log(`MoveHandler:checkWords - checking: ${w.text}`)
+      if (!WordList.hasOwnProperty(w.text.toLowerCase())) {
+        console.log(`MoveHandler:checkWords - ${w.text} invalid`)
+        invalidWords.push(w.text);
+      }
+    }
+    if (invalidWords.length >= 1) {throw new Error(`Invalid Words: ${invalidWords.join()}`)}
+  }
+}

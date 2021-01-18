@@ -1,0 +1,23 @@
+{
+  "/public/*": {
+    "target": "http://localhost:5500",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/api/*": {
+    "target": "http://127.0.0.1:3000/api/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/nestjsroot/*": {
+    "target": "http://127.0.0.1:3000",
+    "secure": false,
+    "pathRewrite": {
+      "^/nestjsroot/": "/"
+    },
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,40 @@
+.heading {
+  padding-left: 10px;
+  color: white;
+}
+
+.nodecoration {
+  text-decoration: none;
+  color: white;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 15px 350px 1fr 15px;
+  grid-template-rows: 15px 250px 1fr 15px;
+  column-gap: 10px;
+  row-gap: 15px;
+  justify-items: center;
+  align-items: start;
+}
+
+.score-container {
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 1;
+  display: inline;
+}
+
+.rack-container {
+  grid-column: 2 / span 1;
+  grid-row: 3 / span 1;
+}
+
+.board-container {
+  grid-column: 3 / span 1;
+  grid-row: 2 / span 2;
+  display: inline;
+}

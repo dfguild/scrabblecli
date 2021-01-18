@@ -1,0 +1,74 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(15, 30px);
+  grid-template-rows: repeat(15,35px);
+  gap: 5px;
+  padding: 4px;
+  width: fit-content;
+  height: unset;
+  border: 10px solid rgba(0,0,0,0.6);
+}
+
+div.tile, div.square{
+  width: 30px;
+  height: 35px;
+  border: 1px solid light gray;
+  border-radius:  4px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding-top: 5px;
+  box-shadow: 1px 1px 1px 1px #ccc;
+}
+
+div.tile:not(.scored) {
+  cursor: pointer;
+  background-color: #462515;
+  color: white;
+}
+
+div.tile.scored {
+  background-color: rgb(134, 52, 31);
+  color: white;
+}
+
+span.letter {
+  text-align: center;
+  line-height: 20px;
+}
+
+span.footer {
+  font-size: 10px;
+  text-align: right;
+  margin-right: 2px;
+  line-height: 10px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: .3;
+}
+
+.tw {
+  background-color: #EF5350;
+}
+
+.dw {
+  background-color: #EF9A9A;
+}
+
+.tl {
+  background-color: #039BE5;
+}
+
+.dl {
+  background-color: #81D4FA;
+}
+

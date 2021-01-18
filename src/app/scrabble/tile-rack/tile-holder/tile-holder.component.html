@@ -1,0 +1,28 @@
+<ng-container *ngFor="let tile of tiles; index as i">
+  <div cdkDropList
+  class="rackdrop"
+  [cdkDropListData]="'TR' + tile.row + ',' + tile.col"
+  [cdkDropListSortingDisabled]="true"
+  (cdkDropListDropped)="dropped($event)">
+    <div [ngClass]="tile.sqClasses" cdkDrag [cdkDragData]="'TR' + tile.row + ',' + tile.col">
+      <div *cdkDragPlaceholder style="display: none"></div>
+      <span class="letter">
+        {{tile.mainText}}
+      </span>
+      <span class="footer" *ngIf="tile.isTile">
+        {{tile.letterValue.toString()}}
+      </span>
+    </div>
+  </div>
+</ng-container>
+<div *ngIf="swapTilesButtonPressed" class="swapContainer">
+  <div class="checkBoxHolder" *ngFor="let tile of tiles; index as i">
+    <mat-checkbox color="primary"
+    *ngIf="tile.isTile"
+    #checkbox
+    [checked]="false"
+    (change)="swapTilesSelected[i] = checkbox.checked"
+    ></mat-checkbox>
+  </div>
+  <p color="primary" class="swapMessage">Select tiles and hit Swap Tiles</p>
+</div>

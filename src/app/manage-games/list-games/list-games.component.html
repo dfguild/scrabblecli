@@ -1,0 +1,29 @@
+<mat-list>
+  <mat-list-item class="headings">
+    <span class="id">ID</span>
+    <span class="name">Game Name</span>
+    <span class="players">Players</span>
+    <span class="turn">In play</span>
+    <span class="actionJoin">Join</span>
+    <span class="actionStart">Start</span>
+  </mat-list-item>
+  <ng-container *ngIf="((manageGamesSvc.socketReady$ | async)? getGames() : false )">
+    <mat-list-item *ngFor="let game of games; last as last">
+      <span class="id">{{game.gameId}}</span>
+      <span class="name">{{game.gameName}}</span>
+      <span class="players">{{game.gamePlayers.join(', ')}}</span>
+      <span class="turn">{{gameStateMessage[game.gameState]}}</span>
+      <span class="actionJoin">
+        <a mat-button>
+          <mat-icon mat-list-icon (click)="joinGame(game.gameId)">person_add</mat-icon>
+        </a>
+      </span>
+      <span class="actionStart">
+        <a mat-button>
+          <mat-icon mat-list-icon (click)="startGame(game.gameId)" >launch</mat-icon>
+        </a>
+      </span>
+      <mat-divider *ngIf="!last"></mat-divider>
+    </mat-list-item>
+  </ng-container>
+</mat-list>

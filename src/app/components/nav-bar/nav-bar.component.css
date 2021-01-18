@@ -1,0 +1,13 @@
+h2 {
+  padding-left: 10px;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}

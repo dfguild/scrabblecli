@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+  <span>
+      <a href="/"><h2>Guild Scrabble</h2></a>
+  </span>
+  <span class="example-spacer"></span>
+  <span>
+    <span *ngIf="router.isActive('/scrabble', true)">
+      <a mat-icon-button [routerLink]="'/manageGames'">
+        <mat-icon mat-list-icon matTooltip="List Games">list</mat-icon>
+      </a>
+    </span>
+    <app-authentication-button></app-authentication-button>
+  </span>
+</mat-toolbar>

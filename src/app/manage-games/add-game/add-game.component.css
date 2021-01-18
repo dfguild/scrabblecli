@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  padding: 3px;
+  margin-right: 40px;
+}
+
+.inputLabel {
+  margin-right: 10px;
+}

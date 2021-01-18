@@ -1,0 +1,23 @@
+mat-card.tilerack {
+  width: 285px;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+span.playerName {
+  line-height: 20px;
+  font-size: 20px;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+button {
+  flex: 1 1 0px;
+}
