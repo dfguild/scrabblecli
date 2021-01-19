@@ -40,24 +40,24 @@ export class ListGamesComponent {
     return true;
   }
 
-  joinGame(gameId: number): void {
+  joinGame(id: string): void {
     for (const [i, v] of this.games.entries()) {
-      if (v.gameId === gameId) {
+      if (v.id === id) {
         if (!this.games[i].gamePlayers.includes(this.manageGamesSvc.player)) {
           this.games[i].gamePlayers.push(this.manageGamesSvc.player);
-          this.manageGamesSvc.joinGame(gameId);
+          this.manageGamesSvc.joinGame(id);
         }
         break;
       }
     }
   }
 
-  startGame(gameId: number): void {
-    this.manageGamesSvc.gameId = gameId;
-    if ( this.games.findIndex(g => ((g.gameId === gameId) && g.gamePlayers.includes(this.manageGamesSvc.player))) === -1 ) {
+  startGame(id: string): void {
+    this.manageGamesSvc.id = id;
+    if ( this.games.findIndex(g => ((g.id === id) && g.gamePlayers.includes(this.manageGamesSvc.player))) === -1 ) {
       // Game not joined
-      console.log(`startGame - player ${this.manageGamesSvc.player} and game ${gameId} not found -> joining`)
-      this.joinGame(gameId);
+      console.log(`startGame - player ${this.manageGamesSvc.player} and game ${id} not found -> joining`)
+      this.joinGame(id);
     }
 
     this.router.navigateByUrl('/scrabble');

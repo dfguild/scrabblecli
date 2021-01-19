@@ -14,8 +14,8 @@ export class MoveSocketService {
     this.authSvc.socket$.subscribe(s => this.socket = s);
   }
 
-  startGame(player: string, gameId: number){
-    this.socket.emit('startGame', {player: player, gameId: gameId});
+  startGame(player: string, id: string){
+    this.socket.emit('startGame', {player: player, id: id});
   }
 
   updateGame(gm: GameDTO){

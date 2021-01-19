@@ -48,7 +48,7 @@ export class GameService {
 
   player: string = '';
   game: string = '';
-  gameId: number = NaN;
+  id: string = '';
   passCounter: number = 0;
   initialLoad: boolean = false;
 
@@ -80,15 +80,15 @@ export class GameService {
       this.dragDropService.setGameService(this);
     }
 
-  startGame(player: string, gameId: number) {
+  startGame(player: string, id: string) {
     this.initialLoad = true;
     this.player = player;
-    this.gameId = gameId;
+    this.id = id;
     this.turnState.gameState = GameState.InPlay;
     this.mvSocketService.getGameDTO().subscribe(g => this.processGameMoveDTO(g));
-    console.log(`GameService:startGame calling startGame on SocketSvc with player: ${player} and gameId: ${gameId}`);
+    console.log(`GameService:startGame calling startGame on SocketSvc with player: ${player} and id: ${id}`);
     this.mvSocketService.getGameJoinUpdates().subscribe(g => this.processGameJoins(g));
-    this.mvSocketService.startGame(player, gameId);
+    this.mvSocketService.startGame(player, id);
   }
 
   //Received an update from the Server with a new move (including this players)
@@ -202,7 +202,7 @@ export class GameService {
 
   private createGameDTO(): GameDTO {
     const gDto = new GameDTO();
-    gDto.gameId = this.gameId;
+    gDto.id = this.id;
     gDto.gameName = this.game;
     gDto.remainingTiles = this.tileBagService.tileBag.map(o => o.letter);
     gDto.grid = this.grid.map(row => row.map(s => s.letter));

@@ -1,5 +1,5 @@
 export class GameDTO {
-  gameId: number = NaN;
+  id: string = '';
   gameName: string = '';
   turn: number = 0;
   totalMoves: number = 0;

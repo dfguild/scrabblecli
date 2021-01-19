@@ -1,5 +1,5 @@
 export default class GameCreateInDto {
   gameName: string = '';
-  gameId: number = 0;
+  id: string = '';
   playerName: string = '';
 }

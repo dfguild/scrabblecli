@@ -12,7 +12,7 @@ import { Socket } from 'ngx-socket-io';
 })
 export class ManageGamesSocketService {
   public player: string = '';
-  public gameId: number = 0;
+  public id: string = '';
   private socket: Socket = {} as Socket;
 
   private socketReady = new BehaviorSubject(false);
@@ -48,9 +48,9 @@ export class ManageGamesSocketService {
     });
   }
 
-  joinGame(gameId: number): void {
+  joinGame(id: string): void {
     const g = new GameCreateInDto;
-    g.gameId = gameId;
+    g.id = id;
     g.playerName = this.player;
     this.waitFor(this.isSocketReady).then(_ => {
       console.log('ManageGamesSocketService:joinGame sending:', g);

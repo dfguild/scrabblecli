@@ -13,7 +13,7 @@ export class ScrabbleComponent implements OnInit {
 
   loadingMessage: boolean = true;
   public player = '';
-  public gameId = NaN;
+  public id = '';
   public gameName = '';
   public gridSquares: Square[][] = [];
   public tileRack: Square[] = [];
@@ -30,20 +30,20 @@ export class ScrabbleComponent implements OnInit {
 
   ngOnInit(): void {
     this.player = this.signOnSvc.player;
-    this.gameId = this.signOnSvc.gameId;
+    this.id = this.signOnSvc.id;
 
-    if (this.player === '' || this.gameId === NaN) {
+    if (this.player === '' || this.id === '') {
       this.router.navigateByUrl('/signon');
       return;
     }
 
-    console.log(`ScabbleComponent:OnInit - calling startGame with pl=${this.player} gm=${this.gameId}`)
-    this.gameSvc.startGame(this.player, this.gameId);
+    console.log(`ScabbleComponent:OnInit - calling startGame with pl=${this.player} gm=${this.id}`)
+    this.gameSvc.startGame(this.player, this.id);
     this.gameSvc.tileRack$.subscribe(v => this.tileRack = v);
   }
 
   gotoGames(): void {
-    this.signOnSvc.gameId=NaN;
+    this.signOnSvc.id = '';
     this.router.navigateByUrl('/signon');
   }
 }
