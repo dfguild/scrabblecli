@@ -1,8 +1,12 @@
-import { NgxLoggerLevel } from 'ngx-logger';
+import { domain, clientId, audience } from '../../auth_config.json';
 
 export const environment = {
   production: true,
-  logLevel: NgxLoggerLevel.OFF,
-  serverLogLevel: NgxLoggerLevel.OFF,
-  apiUrl: 'http://localhost:3000/',
+  apiUrl: 'https://guild-scrabble-api.azurewebsites.net/',
+  auth: {
+    domain,
+    clientId,
+    audience,
+    redirectUri: window.location.origin,
+  },
 };
