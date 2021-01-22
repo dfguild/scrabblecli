@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { GameService, Player } from '../Services/game.service';
+import { GameService, Player } from '../services/game.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GameState } from '../Services/Game-dto';
+import { GameState } from '../services/Game-dto';
 
 @Component({
   selector: 'app-tile-rack',

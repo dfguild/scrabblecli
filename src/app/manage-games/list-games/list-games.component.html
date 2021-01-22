@@ -7,7 +7,7 @@
     <span class="actionJoin">Join</span>
     <span class="actionStart">Start</span>
   </mat-list-item>
-  <ng-container *ngIf="((manageGamesSvc.socketReady$ | async)? getGames() : false )">
+  <ng-container *ngIf="((socketSvc.socketReady$ | async)? getGames() : false )">
     <mat-list-item *ngFor="let game of games; index as i; last as last">
       <span class="id">{{i + 1}}</span>
       <span class="name">{{game.gameName}}</span>

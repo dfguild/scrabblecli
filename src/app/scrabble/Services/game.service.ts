@@ -133,7 +133,16 @@ export class GameService {
 
     this.tileBagService.tileBag = this.assignPointValues(gmDTO.remainingTiles);
     this.turnState.tilesRemaining = this.tileBagService.tileBag.length;
-    console.log(`GameService:processDto - setting turnState tileBag length to:${this.turnState.tilesRemaining}`)
+    console.log(`GameService:processDto - setting turnState tileBag length to:${this.turnState.tilesRemaining}`);
+
+    this.turnState.turn = gmDTO.turn;
+    if (!this.turnState.myTurn) {
+      //Handle case where new player joins and gets the move.
+      this.resetMove();  // reset move incase user started move
+      this.updateGrid();
+      this.updateTileRack();
+    }
+
     this.updateTurnState();
   }
 
@@ -149,6 +158,7 @@ export class GameService {
 
   resetMove():void {
     console.log('GameService:resetMove entered')
+    //Move current move tiles back to rack
     this.currentMove.forEach(sq=>{
       this.dragDropService.insertShiftTileRight(0, sq.letter[0]);
       sq.letter = '';
@@ -172,7 +182,7 @@ export class GameService {
 
   checkGameOver(): void {
     if ((this.tileBagService.getNumTiles(this.tileRack) === 0 && this.tileBagService.tileBag.length === 0) ||
-        (this.passCounter === this.players.length)){
+        (this.passCounter === this.players.length && this.players.length > 1)){
       console.log(`GameService:checkGameOver - Setting Game Over`);
       this.turnState.gameState = GameState.GameOver;
     }

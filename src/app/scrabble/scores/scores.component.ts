@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GameState } from '../Services/Game-dto';
-import { Player, GameService } from '../Services/game.service';
+import { GameState } from '../services/Game-dto';
+import { Player, GameService } from '../services/game.service';
 
 
 @Component({

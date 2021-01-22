@@ -1,4 +1,4 @@
-import { GameState } from '../../scrabble/Services/Game-dto';
+import { GameState } from '../../scrabble/services/Game-dto';
 
 export class GameListItem {
   gameName: string = '';

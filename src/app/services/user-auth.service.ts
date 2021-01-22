@@ -1,5 +1,4 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { AuthService } from '@auth0/auth0-angular';
 import { take } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -10,8 +9,6 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class UserAuthService {
   public profileJson: string = '';
 
-  private socketSubject = new BehaviorSubject<Socket>(this.socket);
-  public socket$ = this.socketSubject.asObservable();
 
   public ready = false;
   public isAuthenticated$: Observable<boolean>
@@ -42,9 +39,5 @@ export class UserAuthService {
     this.authToken = await this.auth.getAccessTokenSilently().pipe(take(1)).toPromise();
     console.log(`UserAuthService access token is: ${this.authToken}`);
     this.ready = true;
-  }
-
-  set socket(s: Socket) {
-    this.socketSubject.next(s);
   }
 }

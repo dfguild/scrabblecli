@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Square } from '../../Services/Square';
+import { Square } from '../../services/Square';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { DragDropService } from '../../Services/drag-drop.service';
-import { GameService } from '../../Services/game.service';
+import { DragDropService } from '../../services/drag-drop.service';
+import { GameService } from '../../services/game.service';
 
 
 @Component({

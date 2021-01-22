@@ -4,11 +4,16 @@
   </span>
   <span class="example-spacer"></span>
   <span>
-    <span *ngIf="router.isActive('/scrabble', true)">
+    <span *ngIf="router.isActive('/scrabble', true); else elseTemplate">
       <a mat-icon-button [routerLink]="'/manageGames'">
         <mat-icon mat-list-icon matTooltip="List Games">list</mat-icon>
       </a>
     </span>
+    <ng-template #elseTemplate>
+      <span>
+        {{this.userAuth.playerName$ | async}}
+      </span>
+    </ng-template>
     <app-authentication-button></app-authentication-button>
   </span>
 </mat-toolbar>

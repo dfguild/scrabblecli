@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, Inject } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
-import { Square } from '../Services/Square';
-import { DragDropService } from '../Services/drag-drop.service';
+import { Square } from '../services/Square';
+import { DragDropService } from '../services/drag-drop.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { LoadingComponent } from '../../components/loading/loading.component';
-import { GameService } from '../Services/game.service';
+import { GameService } from '../services/game.service';
 
 @Component({
   selector: 'app-board',
