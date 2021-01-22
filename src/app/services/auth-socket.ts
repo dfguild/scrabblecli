@@ -1,4 +1,4 @@
-import { Socket, SocketIoConfig } from 'ngx-socket-io'
+import { Socket } from 'ngx-socket-io'
 import { environment } from 'src/environments/environment';
 
 export class AuthSocket extends Socket{

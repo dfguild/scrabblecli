@@ -1,0 +1,14 @@
+{
+  "routes": [
+    {
+      "route": "/scrabble",
+      "serve": "/",
+      "statusCode": 301
+    },
+    {
+      "route": "/manageGames",
+      "serve": "/",
+      "statusCode": 301
+    }
+  ]
+}
