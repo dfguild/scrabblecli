@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ManageGamesSocketService } from '../manage-games/Services/manage-games-socket.service';
-import { GameService, Player } from './services/game.service';
+import { GameService } from './services/game.service';
+import { Player } from './services/Player';
 import { Square } from './services/Square';
 
 @Component({

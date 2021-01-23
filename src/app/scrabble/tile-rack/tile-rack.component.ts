@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { GameService, Player } from '../services/game.service';
+import { GameService } from '../services/game.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GameState } from '../services/Game-dto';
 
@@ -16,7 +16,7 @@ export class TileRackComponent implements OnInit {
   gameOver: boolean = false;
 
   constructor(
-    private readonly gmSvc: GameService,
+    readonly gmSvc: GameService,
     private readonly snackBar: MatSnackBar,
   ) { }
 

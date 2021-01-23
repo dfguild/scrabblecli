@@ -10,12 +10,13 @@ import { SocketService } from '../../services/socket.service';
 })
 export class MoveSocketService {
   socket = {} as Socket;
+  socketReady$!: Observable<boolean>;
 
   constructor(
-    private readonly authSvc: UserAuthService,
     private readonly socketSvc: SocketService
     ) {
     this.socketSvc.socket$.subscribe(s => this.socket = s);
+    this.socketReady$ = socketSvc.socketReady$;
   }
 
   startGame(player: string, id: string){

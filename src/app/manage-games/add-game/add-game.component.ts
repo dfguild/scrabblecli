@@ -9,14 +9,14 @@ import { ManageGamesSocketService } from '../Services/manage-games-socket.servic
 export class AddGameComponent implements OnInit {
   addGameButtonPressed = false;
 
-  constructor(private readonly signonSvc: ManageGamesSocketService) { }
+  constructor(readonly manageGameSvc: ManageGamesSocketService) { }
 
   ngOnInit(): void {
   }
 
   addGame(gameName: string): void {
     console.log(`addGame:addGame adding:${gameName}`);
-    (gameName) && this.signonSvc.createGame(gameName);
+    (gameName) && this.manageGameSvc.createGame(gameName);
     this.addGameButtonPressed = !this.addGameButtonPressed;
   }
 }

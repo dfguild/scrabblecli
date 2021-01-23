@@ -26,7 +26,7 @@ export class SocketService {
   async setUpSocket() {
     await this.waitFor_(() => this.userAuth.authToken !== '');
     this.socket = new AuthSocket(this.userAuth.authToken);
-    console.log(`SocketSvc:setUpSocket got socket=${this.socket}`);
+    console.log(`SocketSvc:setUpSocket got socket=${this.socket_}`);
 
     //handlers for socket issues
     this.socket_.on('disconnect', (reason: string) => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { GameDTO, PlayerDTO, GameState } from './Game-dto';
 import { Square } from './Square';
@@ -7,39 +7,8 @@ import { MoveHandlerService } from './move-handler.service';
 import { DragDropService } from './drag-drop.service';
 import { TileBagService } from './tile-bag.service';
 import { MoveSocketService } from './move-socket.service';
-
-export class Player {
-  playerName: string = '';
-  order: number = 0;
-  score: number = 0;
-
-  constructor(p: PlayerDTO) {
-    this.playerName = p.player_name;
-    this.order = p.order;
-    this.score = p.score;
-  }
-}
-
-export class TurnState {
-  public myOrder = 0;
-  private turn_ = 0;
-  public tilesRemaining = 0;
-  public totalMoves = 0;
-  public gameState = GameState.NotStarted;
-  public gameMessage: string = '';
-
-  set turn(t: number) {
-    this.turn_ = t;
-  }
-
-  get turn(): number {
-    return this.turn_;
-  }
-
-  get myTurn(): boolean {
-    return ((this.gameState !== GameState.GameOver) && (this.myOrder === this.turn_));
-  }
-}
+import { Player } from './Player';
+import { TurnState } from './TurnState';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +20,7 @@ export class GameService {
   id: string = '';
   passCounter: number = 0;
   initialLoad: boolean = false;
+  socketReady$!: Observable<boolean>;
 
   public grid: Square[][] = [];
   private gridSubject = new BehaviorSubject<Square[][]>([]);
@@ -78,6 +48,7 @@ export class GameService {
     ) {
       this.mvHandlerService.setGameService(this);
       this.dragDropService.setGameService(this);
+      this.socketReady$ = mvSocketService.socketReady$;
     }
 
   startGame(player: string, id: string) {

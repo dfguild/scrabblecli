@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { GameListDTO } from '../Services/Game-List.dto';
 import { ManageGamesSocketService } from '../Services/manage-games-socket.service';
 import { GameState } from '../../scrabble/services/Game-dto';
-import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-list-games',
@@ -19,7 +18,6 @@ export class ListGamesComponent {
 
   constructor(
     readonly manageGamesSvc: ManageGamesSocketService,
-    readonly socketSvc: SocketService,
     readonly router: Router,
   ){
     this.gameStateMessage[GameState.NotStarted] = 'Game Not Started';

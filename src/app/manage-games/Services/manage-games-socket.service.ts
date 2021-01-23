@@ -14,6 +14,7 @@ export class ManageGamesSocketService {
   public player: string = '';
   public id: string = '';
   private socket: Socket = {} as Socket;
+  public socketReady$!: Observable<boolean>;
 
   constructor(
     private userAuth: UserAuthService,
@@ -21,6 +22,7 @@ export class ManageGamesSocketService {
   ) {
     console.log(`ManageGamesSocketSvc:constructor Calling setup socket`);
     this.setUpSocket();
+    this.socketReady$ = this.socketSvc.socketReady$;
   }
 
   async setUpSocket() {

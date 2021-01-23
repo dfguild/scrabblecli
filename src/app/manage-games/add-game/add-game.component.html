@@ -4,14 +4,14 @@
     <input #gameName matInput type=text class="forms-control" autofocus (keyup.enter)="addGame(gameName.value)"/>
   </div>
   <div>
-    <a mat-icon-button (click)="addGame(gameName.value)">
+    <a mat-icon-button (click)="addGame(gameName.value)" [disabled]="manageGameSvc.socketReady$ | async">
       <mat-icon mat-list-icon matTooltip="Add a new game">add_circle</mat-icon>
     Add</a>
   </div>
 </ng-container>
 <ng-template #elseTemplate>
   <div>
-    <a mat-icon-button (click)="addGameButtonPressed = true">
+    <a mat-icon-button (click)="addGameButtonPressed = true" [disabled]="manageGameSvc.socketReady$ | async">
       <mat-icon mat-list-icon matTooltip="Add a new game">add_circle</mat-icon>
     Add</a>
   </div>
