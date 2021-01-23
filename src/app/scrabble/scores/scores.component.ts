@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GameState } from '../services/Game-dto';
-import { Player, GameService } from '../services/game.service';
+import { GameService } from '../services/game.service';
+import { Player } from '../services/Player';
 
 
 @Component({
