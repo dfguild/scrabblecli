@@ -1,6 +1,8 @@
-h2 {
-  padding-left: 10px;
-  color: white;
+:host {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 a {

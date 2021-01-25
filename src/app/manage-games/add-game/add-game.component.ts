@@ -15,7 +15,7 @@ export class AddGameComponent implements OnInit {
   }
 
   addGame(gameName: string): void {
-    console.log(`addGame:addGame adding:${gameName}`);
+    console.log(`addGame:addGame gameName:${gameName}`);
     (gameName) && this.manageGameSvc.createGame(gameName);
     this.addGameButtonPressed = !this.addGameButtonPressed;
   }

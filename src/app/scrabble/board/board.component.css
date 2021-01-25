@@ -1,24 +1,48 @@
+:host {
+  margin: 0 auto;
+}
+
 .board {
   display: grid;
-  grid-template-columns: repeat(15, 30px);
-  grid-template-rows: repeat(15,35px);
-  gap: 5px;
-  padding: 4px;
+  grid-template-columns: repeat(15, 21px);
+  grid-template-rows: repeat(15,24px);
+  gap: 3px;
+  padding: 3px;
   width: fit-content;
   height: unset;
-  border: 10px solid rgba(0,0,0,0.6);
+  border: 2px solid rgba(0,0,0,0.6);
 }
 
 div.tile, div.square{
-  width: 30px;
-  height: 35px;
+  width: 21px;
+  height: 24px;
   border: 1px solid light gray;
   border-radius:  4px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  padding-top: 5px;
+  flex-flow: column nowrap;
+  padding-top: 1px;
   box-shadow: 1px 1px 1px 1px #ccc;
+}
+
+div.square {
+  font-size: 12px;
+  text-align: center;
+  padding-top: 2px;
+}
+
+span.letter {
+  line-height: 11px;
+  font-size: 11px;
+  text-align: center;
+  padding-top: 3px;
+}
+
+span.footer {
+  text-align: right;
+  padding-right: 3px;
+  font-size: 8px;
+  line-height: 8px;
 }
 
 div.tile:not(.scored) {
@@ -30,18 +54,6 @@ div.tile:not(.scored) {
 div.tile.scored {
   background-color: rgb(134, 52, 31);
   color: white;
-}
-
-span.letter {
-  text-align: center;
-  line-height: 20px;
-}
-
-span.footer {
-  font-size: 10px;
-  text-align: right;
-  margin-right: 2px;
-  line-height: 10px;
 }
 
 .cdk-drag-preview {
@@ -72,3 +84,48 @@ span.footer {
   background-color: #81D4FA;
 }
 
+@media only screen and (min-width: 600px) {
+  :host {
+    margin-left: 20px;
+  }
+
+  .board {
+    grid-template-columns: repeat(15, 30px);
+    grid-template-rows: repeat(15,35px);
+    gap: 5px;
+    padding: 5px;
+    border: 8px solid rgba(0,0,0,0.6);
+  }
+
+  div.tile, div.square{
+    width: 30px;
+    height: 35px;
+  }
+
+  div.square {
+    font-size: 14px;
+    text-align: center;
+    padding-top: 2px;
+  }
+
+  span.letter {
+    font-size: 14px;
+    line-height: 14px;
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  span.footer {
+    text-align: right;
+    padding-right: 3px;
+    font-size: 10px;
+    line-height: 10px;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1000px) {
+  :host {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

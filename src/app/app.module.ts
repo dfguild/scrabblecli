@@ -22,8 +22,6 @@ const routes: Routes = [{path: 'manageGames', component: ManageGamesComponent, c
                         {path: '**', redirectTo: '/manageGames', pathMatch: 'full'},
                       ];
 
-//const config: SocketIoConfig = { url: environment.apiUrl, options: {}};
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +37,6 @@ const routes: Routes = [{path: 'manageGames', component: ManageGamesComponent, c
     ManageGamesModule,
     ScrabbleModule,
     SharedComponentsModule,
-//    SocketIoModule.forRoot(config),
     SocketIoModule,
     AuthModule.forRoot({...environment.auth}),
   ],

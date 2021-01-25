@@ -20,8 +20,8 @@ export class ListGamesComponent {
     readonly manageGamesSvc: ManageGamesSocketService,
     readonly router: Router,
   ){
-    this.gameStateMessage[GameState.NotStarted] = 'Game Not Started';
-    this.gameStateMessage[GameState.InPlay] = 'Game In Play';
+    this.gameStateMessage[GameState.NotStarted] = 'Not Started';
+    this.gameStateMessage[GameState.InPlay] = 'In Play';
     this.gameStateMessage[GameState.GameOver] = 'Game Over';
   }
 

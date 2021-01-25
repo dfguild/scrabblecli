@@ -1,18 +1,37 @@
-mat-card {
-  width: 285px;
+:host {
+  align-content: center;
+  width: 100%;
 }
 
-.order {
-  width: 20%;
+mat-card.container {
+  padding: 5px !important;
 }
 
-.name {
-  width: 50%;
+.playerContainer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: stretch;
 }
 
-.score {
-  width: 30%;
-  text-align: right;
+mat-card.playerItem {
+  max-width: calc((100% - 10px)/4);
+  padding: 6px;
+  flex: 1 1 0px;
+}
+
+.detailsContainer {
+  display: flex;
+  justify-content: flex-end;
+  flex-flow: row wrap;
+}
+
+span.name {
+  white-space: nowrap;
+}
+
+span.name {
+  flex-grow: 1;
 }
 
 .turn {

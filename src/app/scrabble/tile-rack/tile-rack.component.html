@@ -6,6 +6,7 @@
   <mat-card-content>
     <h3 *ngIf="myTurn" [class.myturn]="myTurn">Your Turn</h3>
     <h3 *ngIf="gameOver" [class.myturn]="myTurn">Game Over</h3>
+    <h3 *ngIf="!myTurn && !gameOver"></h3>
     <app-tile-holder #tileHolder></app-tile-holder>
   </mat-card-content>
   <mat-card-actions>

@@ -1,25 +1,16 @@
 <mat-list>
-  <mat-list-item class="headings">
-    <span class="id">ID</span>
-    <span class="name">Game Name</span>
-    <span class="players">Players</span>
-    <span class="turn">In play</span>
-    <span class="actionJoin">Join</span>
-    <span class="actionStart">Start</span>
-  </mat-list-item>
   <ng-container *ngIf="((manageGamesSvc.socketReady$ | async)? getGames() : false )">
-    <mat-list-item *ngFor="let game of games; index as i; last as last">
-      <span class="id">{{i + 1}}</span>
+    <mat-list-item class="gameRow" *ngFor="let game of games; index as i; last as last">
       <span class="name">{{game.gameName}}</span>
       <span class="players">{{game.gamePlayers.join(', ')}}</span>
       <span class="turn">{{gameStateMessage[game.gameState]}}</span>
       <span class="actionJoin">
-        <a mat-button>
+        <a mat-button class="button">
           <mat-icon mat-list-icon (click)="joinGame(game.id)">person_add</mat-icon>
         </a>
       </span>
       <span class="actionStart">
-        <a mat-button>
+        <a mat-button class="button">
           <mat-icon mat-list-icon (click)="startGame(game.id)" >launch</mat-icon>
         </a>
       </span>
