@@ -10,7 +10,7 @@
     <app-tile-holder #tileHolder></app-tile-holder>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async))" (click)="resetMoveEvent()">Reset</button>
+    <button mat-button [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async))" (click)="resetMoveEvent()">Recall</button>
     <button mat-button [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async))" (click)="passMoveEvent()">Pass</button>
     <button mat-button [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async) || (tilesRemaining < 7))" (click)="tileHolder.swapTileEventHandler()">Swap Tiles</button>
     <button mat-raised-button color="primary" [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async))" (click)="playMoveEvent()">Play</button>
