@@ -1,9 +1,8 @@
 :host, .swapContainer {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(8, 30px);
+  grid-template-rows: 35px;
+  padding: 5px;
   gap: 5px;
   border: 1px solid rgb(54, 41, 41);
   background:rgb(146, 111, 111);
@@ -16,7 +15,7 @@ div.tile, div.square {
   border-radius:  4px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
   padding-top: 5px;
   box-shadow: 1px 1px 1px 1px #ccc;
 }

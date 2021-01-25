@@ -11,7 +11,7 @@
     </span>
     <ng-template #elseTemplate>
       <span>
-        {{this.userAuth.playerName$ | async}}
+        {{this.userAuth.playerName$ | async | titlecase}}
       </span>
     </ng-template>
     <app-authentication-button></app-authentication-button>

@@ -2,7 +2,7 @@
   <mat-card-content class="playerContainer">
     <mat-card *ngFor="let player of players; index as i; last as last" class="playerItem" [class.winner]="isWinner(i)">
       <mat-card-content class="detailsContainer">
-        <span class="name" [class.turn]="i === turn">{{player.playerName}}</span>
+        <span class="name" [class.turn]="i === turn">{{player.playerName | titlecase}}</span>
         <span class="score" [class.turn]="i === turn">{{player.score}}</span>
       </mat-card-content>
     </mat-card>

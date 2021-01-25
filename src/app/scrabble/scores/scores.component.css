@@ -15,6 +15,17 @@ mat-card.container {
   align-items: stretch;
 }
 
+@media (min-width: 775px) {
+  .playerContainer {
+    flex-flow: column nowrap;
+  }
+
+  mat-card.container {
+    width: 301px;
+    padding: 8px;
+  }
+}
+
 mat-card.playerItem {
   box-sizing: border-box;
   max-width: calc((100%)/4);

@@ -60,4 +60,10 @@ export class ListGamesComponent {
 
     this.router.navigateByUrl('/scrabble');
   }
+
+  getPlayerList(i: number): string {
+    return this.games[i].gamePlayers.join(', ')
+      .replace(this.games[i].gamePlayers[this.games[i].gameTurn],
+          '<b>' + this.games[i].gamePlayers[this.games[i].gameTurn] + '</b>');
+  }
 }

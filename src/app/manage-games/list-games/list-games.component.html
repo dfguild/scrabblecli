@@ -2,7 +2,7 @@
   <ng-container *ngIf="((manageGamesSvc.socketReady$ | async)? getGames() : false )">
     <mat-list-item class="gameRow" *ngFor="let game of games; index as i; last as last">
       <span class="name">{{game.gameName}}</span>
-      <span class="players">{{game.gamePlayers.join(', ')}}</span>
+      <span class="players" [innerHTML]="getPlayerList(i)"></span>
       <span class="turn">{{gameStateMessage[game.gameState]}}</span>
       <span class="actionJoin">
         <a mat-button class="button">
