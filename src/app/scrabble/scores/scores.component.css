@@ -1,5 +1,6 @@
 :host {
   align-content: center;
+  box-sizing: border-box;
   width: 100%;
 }
 
@@ -15,7 +16,8 @@ mat-card.container {
 }
 
 mat-card.playerItem {
-  max-width: calc((100% - 10px)/4);
+  box-sizing: border-box;
+  max-width: calc((100%)/4);
   padding: 6px;
   flex: 1 1 0px;
 }

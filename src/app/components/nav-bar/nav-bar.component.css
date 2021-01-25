@@ -13,3 +13,9 @@ a {
 .example-spacer {
   flex: 1 1 auto;
 }
+
+@media (max-height: 500px) {
+  .mat-toolbar-row, .mat-toolbar-single-row {
+    height: unset !important;
+  }
+}
