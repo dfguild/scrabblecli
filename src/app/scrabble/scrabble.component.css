@@ -16,7 +16,7 @@
 @media (min-width: 775px) {
   .container {
     grid-template-columns: 350px 1fr;
-    grid-template-rows: 100px auto;
+    grid-template-rows: auto auto;
     column-gap: 10px;
     grid-template-areas:
       "score board"
@@ -27,11 +27,12 @@
 .score-container {
   grid-area: score;
   display: inline;
+  margin: auto auto;
 }
 
 .rack-container {
   grid-area: rack;
-  margin: 0 auto;
+  margin: 0px auto auto auto;
 }
 
 .board-container {
@@ -41,11 +42,11 @@
 
 @media (min-width: 775px) and (orientation: portrait), (min-width: 1000px) and (orientation: landscape) {
   .score-container {
-    margin: 10px;
+    margin: auto auto;
   }
 
   .rack-container {
-    margin: 10px;
+    margin: auto auto;
   }
 
   .board-container {

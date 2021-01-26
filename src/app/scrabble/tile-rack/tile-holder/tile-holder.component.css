@@ -7,6 +7,7 @@
   border: 1px solid rgb(54, 41, 41);
   background:rgb(146, 111, 111);
   padding: 3px;
+  margin: 0px auto 15px auto;
 }
 
 div.tile, div.square {

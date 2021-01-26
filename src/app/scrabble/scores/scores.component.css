@@ -2,10 +2,12 @@
   align-content: center;
   box-sizing: border-box;
   width: 100%;
+  justify-content: center;
 }
 
 mat-card.container {
   padding: 5px !important;
+  margin: 0 auto;
 }
 
 .playerContainer {
@@ -21,6 +23,7 @@ mat-card.container {
   }
 
   mat-card.container {
+    box-sizing: border-box;
     width: 301px;
     padding: 8px;
   }
@@ -28,7 +31,6 @@ mat-card.container {
 
 mat-card.playerItem {
   box-sizing: border-box;
-  max-width: calc((100%)/4);
   padding: 6px;
   flex: 1 1 0px;
 }
