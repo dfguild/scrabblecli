@@ -154,10 +154,12 @@ export class GameService {
   }
 
   checkGameOver(): void {
-    if ((this.tileBagService.getNumTiles(this.tileRack) === 0 && this.tileBagService.tileBag.length === 0) ||
-        (this.passCounter === this.players.length && this.players.length > 1)){
+    if (this.tileBagService.getNumTiles(this.tileRack) === 0 && this.tileBagService.tileBag.length === 0) {
       console.log(`GameService:checkGameOver - Setting Game Over`);
       this.updateEndOfGameScores();
+      this.turnState.gameState = GameState.GameOver;
+    }else if(this.passCounter === this.players.length && this.players.length > 1) {
+      console.log(`GameService:checkGameOver - Setting Game Over`);
       this.turnState.gameState = GameState.GameOver;
     }
   }
