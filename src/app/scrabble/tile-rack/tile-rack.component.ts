@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GameState } from '../services/Game-dto';

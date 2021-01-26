@@ -2,12 +2,16 @@
   display: grid;
   grid-template-columns: repeat(8, 30px);
   grid-template-rows: 35px;
-  padding: 5px;
   gap: 5px;
   border: 1px solid rgb(54, 41, 41);
   background:rgb(146, 111, 111);
   padding: 3px;
   margin: 0px auto 15px auto;
+}
+
+.swapContainer {
+  padding-left: 0px;
+  border: none;
 }
 
 div.tile, div.square {
@@ -62,6 +66,7 @@ span.footer {
   opacity: .3;
 }
 
+/*
 div.swapContainer {
   display: flex;
   flex-direction: row;
@@ -74,7 +79,7 @@ div.swapContainer {
   padding: 0px;
   margin-top: 5px;
 }
-
+*/
 div.checkBoxHolder {
   width: 30px;
   text-align: center;

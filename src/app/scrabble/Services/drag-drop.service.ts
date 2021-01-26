@@ -93,6 +93,10 @@ this.gm.currentMove.map(s=>console.log(`sq: ${s.letter}-${s.row}-${s.col} `));
   }
 
   public insertShiftTileLeft(toCol: number, letter: string): boolean {
+    if (!this.gm.tileRack[toCol].isTile) {
+      this.gm.tileRack[toCol].letter = letter;
+      return true;
+    }
     let l = this.gm.tileRack[toCol].letter;
     this.gm.tileRack[toCol].letter = letter;
     while (this.gm.tileRack[--toCol].isTile) {

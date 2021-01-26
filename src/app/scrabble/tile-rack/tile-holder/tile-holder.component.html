@@ -15,7 +15,7 @@
     </div>
   </div>
 </ng-container>
-<div *ngIf="swapTilesButtonPressed" class="swapContainer">
+<ng-container *ngIf="swapTilesButtonPressed">
   <div class="checkBoxHolder" *ngFor="let tile of tiles; index as i">
     <mat-checkbox color="primary"
     *ngIf="tile.isTile"
@@ -24,5 +24,4 @@
     (change)="swapTilesSelected[i] = checkbox.checked"
     ></mat-checkbox>
   </div>
-  <p color="primary" class="swapMessage">Select tiles and hit Swap Tiles</p>
-</div>
+</ng-container>
