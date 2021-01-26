@@ -1,4 +1,7 @@
 <mat-card class="container">
+  <mat-card-header>
+    {{gmSvc.game}}
+  </mat-card-header>
   <mat-card-content class="playerContainer">
     <mat-card *ngFor="let player of players; index as i; last as last" class="playerItem" [class.winner]="isWinner(i)">
       <mat-card-content class="detailsContainer">

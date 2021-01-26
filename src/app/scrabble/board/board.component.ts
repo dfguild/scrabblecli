@@ -1,10 +1,9 @@
-import { Component, Input, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { Square } from '../services/Square';
 import { DragDropService } from '../services/drag-drop.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-import { LoadingComponent } from '../../components/loading/loading.component';
 import { GameService } from '../services/game.service';
 
 @Component({

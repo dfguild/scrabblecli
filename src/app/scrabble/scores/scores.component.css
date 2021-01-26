@@ -10,6 +10,10 @@ mat-card.container {
   margin: 0 auto;
 }
 
+mat-card-header {
+  display: none;
+}
+
 .playerContainer {
   display: flex;
   flex-flow: row nowrap;
@@ -26,6 +30,12 @@ mat-card.container {
     box-sizing: border-box;
     width: 301px;
     padding: 8px;
+  }
+
+  mat-card-header {
+    display: block;
+    line-height: 20px;
+    font-size: 20px;
   }
 }
 
