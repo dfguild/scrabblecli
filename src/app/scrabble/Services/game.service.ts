@@ -20,6 +20,7 @@ export class GameService {
   id: string = '';
   passCounter: number = 0;
   initialLoad: boolean = false;
+  private playersDTO: PlayerDTO[] = []; //keep for end of game scoring
   socketReady$!: Observable<boolean>;
 
   public grid: Square[][] = [];
@@ -81,6 +82,7 @@ export class GameService {
 
     //process players array
     this.updatePlayers(gmDTO.players.map(p => new Player(p)));
+    this.playersDTO = gmDTO.players;
 
     (this.initialLoad) && (this.tileRack = this.assignPointValues( gmDTO.players[this.turnState.myOrder].tiles, 99 ));
     if (this.tileRack.length === 7) { this.tileRack.push(new Square('', 99, 7)) } // create 8th square to assist moving tiles around
@@ -155,8 +157,18 @@ export class GameService {
     if ((this.tileBagService.getNumTiles(this.tileRack) === 0 && this.tileBagService.tileBag.length === 0) ||
         (this.passCounter === this.players.length && this.players.length > 1)){
       console.log(`GameService:checkGameOver - Setting Game Over`);
+      this.updateEndOfGameScores();
       this.turnState.gameState = GameState.GameOver;
     }
+  }
+
+  // get points on everyone elses rack and add to my score as winner
+  updateEndOfGameScores(): void {
+    let letters: string[] = [];
+    this.playersDTO.splice(this.turnState.myOrder, 1)
+      .map(p => letters = letters.concat(p.tiles.filter(l => !(l))));
+    this.players[this.turnState.myOrder].score +=
+      this.assignPointValues(letters).map(t => t.letterValue).reduce((prev, next) => prev + next);
   }
 
   //Helpers to Update data Subjects for Components
