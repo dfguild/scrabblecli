@@ -1,9 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { GameListDTO } from '../Services/Game-List.dto';
+import { GameListDTO, GameListItem } from '../Services/Game-List.dto';
 import { ManageGamesSocketService } from '../Services/manage-games-socket.service';
 import { GameState } from '../../scrabble/services/Game-dto';
+
+
+enum MyGameStatus {
+  CanBeJoined,
+  MyActiveGame,
+  MyCompleteGame,
+  NoList
+}
+
+interface MyGameListItem extends GameListItem {
+  myGameStatus: MyGameStatus;
+}
 
 @Component({
   selector: 'app-list-games',
@@ -12,9 +24,10 @@ import { GameState } from '../../scrabble/services/Game-dto';
 })
 export class ListGamesComponent {
 
-  games: GameListDTO = [];
+  games: MyGameListItem[] = [];
   gameStateMessage: string[] = [];
   gamesRequested = false;
+  myGameStatus = MyGameStatus;
 
   constructor(
     readonly manageGamesSvc: ManageGamesSocketService,
@@ -31,20 +44,35 @@ export class ListGamesComponent {
       this.manageGamesSvc.getGames();
       this.manageGamesSvc.getGames$().subscribe(games => {
         console.log(`got update with ${games.length} games`);
-        this.games = games;
+        this.processGames(games);
       });
       this.gamesRequested = true;
     }
     return true;
   }
 
+  private processGames(games: GameListDTO) {
+    this.games = [];
+    for (const g of games) {
+      const mine = g.gamePlayers.includes(this.manageGamesSvc.player);
+      const firstRound = (g.totalMoves <= g.gamePlayers.length);
+      let status = MyGameStatus.NoList;
+      if (!mine && !firstRound) continue;
+      if (!mine && firstRound && (g.gamePlayers.length < 4)) status = MyGameStatus.CanBeJoined;
+      if (mine && g.gameState === GameState.GameOver) status = MyGameStatus.MyCompleteGame;
+      if (mine && (g.gameState !== GameState.GameOver)) status = MyGameStatus.MyActiveGame;
+      const myGame = g as MyGameListItem;
+      myGame.myGameStatus = status;
+      this.games.push(myGame);
+    }
+  }
+
   joinGame(id: string): void {
     for (const [i, v] of this.games.entries()) {
       if (v.id === id) {
-        if (!this.games[i].gamePlayers.includes(this.manageGamesSvc.player)) {
-          this.games[i].gamePlayers.push(this.manageGamesSvc.player);
-          this.manageGamesSvc.joinGame(id);
-        }
+        this.games[i].gamePlayers.push(this.manageGamesSvc.player);
+        this.games[i].myGameStatus = MyGameStatus.MyActiveGame;
+        this.manageGamesSvc.joinGame(id);
         break;
       }
     }

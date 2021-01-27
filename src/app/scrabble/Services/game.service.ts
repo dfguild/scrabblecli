@@ -66,6 +66,7 @@ export class GameService {
   //Received an update from the Server with a new move (including this players)
   private processGameMoveDTO(gmDTO: GameDTO) {
     console.log(`GameService:processDTO with ${JSON.stringify(gmDTO)}`);
+    if (gmDTO.id != this.id) return;  // update for different game;
     let myOrder: number|undefined;
     if (this.initialLoad) {
       this.game = gmDTO.gameName;
@@ -74,7 +75,13 @@ export class GameService {
       this.turnState.myOrder = myOrder;
     }
     this.passCounter = gmDTO.passCounter;
-    this.turnState.turn = gmDTO.turn;
+
+    // if player is only player and made move -- make it next player to disable buttons until player joins
+    if (gmDTO.turn === 0 && gmDTO.totalMoves ===1) {
+      this.turnState.turn = gmDTO.turn + 1;
+    } else {
+      this.turnState.turn = gmDTO.turn;
+    }
     this.turnState.totalMoves = gmDTO.totalMoves;
     this.turnState.gameState = gmDTO.gameState;
     this.turnState.gameMessage = gmDTO.gameMessage;
@@ -101,6 +108,7 @@ export class GameService {
   processGameJoins(gmDTO: GameDTO): void {
     //Update all players except me
     console.log(`GameService:processGameJoins`);
+    if (gmDTO.id != this.id) return;  // update for different game;
     gmDTO.players.filter(p =>p.order != this.turnState.myOrder).map(p => this.players[p.order] = new Player(p));
     this.updatePlayers();
 

@@ -4,12 +4,13 @@
       <span class="name">{{game.gameName}}</span>
       <span class="players" [innerHTML]="getPlayerList(i)"></span>
       <span class="turn">{{gameStateMessage[game.gameState]}}</span>
-      <span class="actionJoin">
+      <span class="action" *ngIf="(game.myGameStatus === myGameStatus.CanBeJoined)">
         <a mat-button class="button">
           <mat-icon mat-list-icon (click)="joinGame(game.id)">person_add</mat-icon>
         </a>
       </span>
-      <span class="actionStart">
+      <span class="action" *ngIf="((game.myGameStatus === myGameStatus.MyActiveGame) ||
+        (game.myGameStatus === myGameStatus.MyCompleteGame))">
         <a mat-button class="button">
           <mat-icon mat-list-icon (click)="startGame(game.id)" >launch</mat-icon>
         </a>
