@@ -19,6 +19,7 @@ export class GameService {
   game: string = '';
   id: string = '';
   passCounter: number = 0;
+  lastGameDTO = {} as GameDTO;
   initialLoad: boolean = false;
   private playersDTO: PlayerDTO[] = []; //keep for end of game scoring
   socketReady$!: Observable<boolean>;
@@ -50,16 +51,17 @@ export class GameService {
       this.mvHandlerService.setGameService(this);
       this.dragDropService.setGameService(this);
       this.socketReady$ = mvSocketService.socketReady$;
+      this.mvSocketService.getGameDTO().subscribe(g => this.processGameMoveDTO(g));
+      this.mvSocketService.getGameJoinUpdates().subscribe(g => this.processGameJoins(g));
     }
 
   startGame(player: string, id: string) {
+    this.resetState();
     this.initialLoad = true;
     this.player = player;
     this.id = id;
     this.turnState.gameState = GameState.InPlay;
-    this.mvSocketService.getGameDTO().subscribe(g => this.processGameMoveDTO(g));
     console.log(`GameService:startGame calling startGame on SocketSvc with player: ${player} and id: ${id}`);
-    this.mvSocketService.getGameJoinUpdates().subscribe(g => this.processGameJoins(g));
     this.mvSocketService.startGame(player, id);
   }
 
@@ -67,6 +69,8 @@ export class GameService {
   private processGameMoveDTO(gmDTO: GameDTO) {
     console.log(`GameService:processDTO with ${JSON.stringify(gmDTO)}`);
     if (gmDTO.id != this.id) return;  // update for different game;
+    this.lastGameDTO = gmDTO;
+    this.mvSocketService.totalMovesReceived = gmDTO.totalMoves;
     let myOrder: number|undefined;
     if (this.initialLoad) {
       this.game = gmDTO.gameName;
@@ -127,14 +131,12 @@ export class GameService {
     this.updateTurnState();
   }
 
-  playMove(): void {
+  playMove(): Promise<boolean> {
     this.turnState.gameState = GameState.InPlay;
     this.players[this.turnState.myOrder].score += this.mvHandlerService.processMove();
     this.tileRack = this.tileBagService.getTiles(this.tileRack);
-    this.checkGameOver();
     this.passCounter = 0; //Valid move; reset pass counter -- used to determine if all pass and game is over.
-    this.mvSocketService.updateGame(this.createGameDTO());
-    this.mvHandlerService.commitMove();
+    return this.updateGame();
   }
 
   resetMove():void {
@@ -147,13 +149,11 @@ export class GameService {
     this.currentMove = [];
   }
 
-  passMove():void {
+  passMove(): Promise<boolean> {
     console.log('GameService:passmove entered')
     this.resetMove();
     this.passCounter++;
-    this.checkGameOver();
-    this.mvSocketService.updateGame(this.createGameDTO());
-    this.mvHandlerService.commitMove();
+    return this.updateGame();
   }
 
   swapTiles(selected: boolean[]): void{
@@ -161,7 +161,25 @@ export class GameService {
     this.passMove();
   }
 
-  checkGameOver(): void {
+  private async updateGame(): Promise<boolean> {
+    this.checkGameOver();
+    this.incrementMove();
+    this.updateTurnState(); //send to disable buttons until new DTO received
+
+    const success = await this.mvSocketService.updateGame(this.createGameDTO());
+    if (success) this.mvHandlerService.commitMove();
+
+    return success;
+  }
+
+  private incrementMove() {
+    this.turnState.totalMoves++;
+    if (this.turnState.gameState != GameState.GameOver) {
+      this.turnState.turn = ((this.turnState.turn + 1) % this.players.length);
+    }
+  }
+
+  private checkGameOver(): void {
     if (this.tileBagService.getNumTiles(this.tileRack) === 0 && this.tileBagService.tileBag.length === 0) {
       console.log(`GameService:checkGameOver - Setting Game Over`);
       this.updateEndOfGameScores();
@@ -172,8 +190,8 @@ export class GameService {
     }
   }
 
-  // get points on everyone elses rack and add to my score as winner
-  updateEndOfGameScores(): void {
+  // !!FIX - DOESN'T WORK -- get points on everyone elses rack and add to my score as winner
+  private updateEndOfGameScores(): void {
     let letters: string[] = [];
     this.playersDTO.splice(this.turnState.myOrder, 1)
       .map(p => letters = letters.concat(p.tiles.filter(l => !(l))));
@@ -181,24 +199,37 @@ export class GameService {
       this.assignPointValues(letters).map(t => t.letterValue).reduce((prev, next) => prev + next);
   }
 
+  private resetState() {
+    this.updateTurnState();
+    this.grid.map(r => r.map(s => s.letter=''));
+    this.players=[];
+    this.tileRack = [];
+    this.updateGrid();
+    this.updateTurnState();
+    this.updateTileRack();
+    this.updatePlayers();
+  }
+
   //Helpers to Update data Subjects for Components
 
+  // Public for use by DragDropService;
   updateGrid(g?: Square[][]): void {
     (g) && (this.grid = g);
     this.gridSubject.next(this.grid);
   }
 
+  // Public for use by DragDropService;
   updateTileRack(tr?: Square[]): void {
     (tr) && (this.tileRack = tr);
     this.tileRackSubject.next(this.tileRack);
   }
 
-  updatePlayers(p?: Player[]): void {
+  private updatePlayers(p?: Player[]): void {
     (p) && (this.players = p);
     this.playersSubject.next(this.players);
   }
 
-  updateTurnState(ts?: TurnState): void {
+  private updateTurnState(ts?: TurnState): void {
     (ts) && (this.turnState = ts);
     this.turnStateSubject.next(this.turnState);
   }
@@ -210,6 +241,7 @@ export class GameService {
     gDto.remainingTiles = this.tileBagService.tileBag.map(o => o.letter);
     gDto.grid = this.grid.map(row => row.map(s => s.letter));
     gDto.turn = this.turnState.turn;
+    gDto.totalMoves = this.turnState.totalMoves;
     gDto.gameMessage = this.turnState.gameMessage;
     gDto.gameState = this.turnState.gameState;
     gDto.passCounter = this.passCounter;

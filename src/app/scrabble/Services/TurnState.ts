@@ -19,4 +19,13 @@ export class TurnState {
   get myTurn(): boolean {
     return ((this.gameState !== GameState.GameOver) && (this.myOrder === this.turn_));
   }
+
+  resetState() {
+    this.myOrder = 0;
+    this.turn_ =0;
+    this.tilesRemaining =0;
+    this.totalMoves = 0;
+    this.gameState = GameState.NotStarted;
+    this.gameMessage = '';
+  }
 }
