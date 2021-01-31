@@ -21,6 +21,7 @@ export class GameService {
   passCounter: number = 0;
   lastGameDTO = {} as GameDTO;
   initialLoad: boolean = false;
+
   private playersDTO: PlayerDTO[] = []; //keep for end of game scoring
   socketReady$!: Observable<boolean>;
 

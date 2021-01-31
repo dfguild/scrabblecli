@@ -18,6 +18,11 @@
     <button mat-button *ngIf="!tileHolder.swapTilesButtonPressed"
       [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async) || (tilesRemaining < 7))"
       (click)="tileHolder.swapTileEventHandler()">Swap Tiles</button>
-    <button mat-raised-button color="primary" [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async))" (click)="playMoveEvent()">Play</button>
+    <button mat-raised-button color="primary"
+      [disabled]="((!myTurn)
+        || !(gmSvc.socketReady$ | async )
+        || (tileHolder.swapTilesButtonPressed)
+        || (gmSvc.currentMove.length === 0))"
+      (click)="playMoveEvent()">Play</button>
   </mat-card-actions>
 </mat-card>
