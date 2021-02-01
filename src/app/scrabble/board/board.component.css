@@ -56,6 +56,10 @@ div.tile.scored {
   color: white;
 }
 
+div.tile.scored.lastMove {
+  background-color: rgb(129, 13, 13);
+}
+
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;

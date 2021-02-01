@@ -19,7 +19,7 @@ export class GameService {
   game: string = '';
   id: string = '';
   passCounter: number = 0;
-  lastGameDTO = {} as GameDTO;
+  preMoveGameDTO = {} as GameDTO;
   initialLoad: boolean = false;
 
   private playersDTO: PlayerDTO[] = []; //keep for end of game scoring
@@ -52,7 +52,7 @@ export class GameService {
       this.mvHandlerService.setGameService(this);
       this.dragDropService.setGameService(this);
       this.socketReady$ = mvSocketService.socketReady$;
-      this.mvSocketService.getGameDTO().subscribe(g => this.processGameMoveDTO(g));
+      this.mvSocketService.getGameDTO().subscribe(g => this.gameDtoEventHandler(g));
       this.mvSocketService.getGameJoinUpdates().subscribe(g => this.processGameJoins(g));
     }
 
@@ -66,12 +66,25 @@ export class GameService {
     this.mvSocketService.startGame(player, id);
   }
 
+
   //Received an update from the Server with a new move (including this players)
+  private gameDtoEventHandler(gmDTO: GameDTO) {
+    console.log(`GameService:processDTO with ${JSON.stringify(gmDTO)}`);
+    if (gmDTO.id != this.id) {
+      console.log('not an update for current game, ignoring DTO');
+      return;  // update for different game;
+    }
+    if (gmDTO.totalMoves <= this.turnState.totalMoves) {
+      console.log('not a new move, ignoring DTO');
+      this.mvSocketService.totalMovesReceived = gmDTO.totalMoves; //tell socket service we got our message
+      return; // No need to process
+    }
+    this.processGameMoveDTO(gmDTO);
+  }
+
   private processGameMoveDTO(gmDTO: GameDTO) {
     console.log(`GameService:processDTO with ${JSON.stringify(gmDTO)}`);
-    if (gmDTO.id != this.id) return;  // update for different game;
-    this.lastGameDTO = gmDTO;
-    this.mvSocketService.totalMovesReceived = gmDTO.totalMoves;
+    this.preMoveGameDTO = gmDTO;
     let myOrder: number|undefined;
     if (this.initialLoad) {
       this.game = gmDTO.gameName;
@@ -134,9 +147,11 @@ export class GameService {
 
   playMove(): Promise<boolean> {
     this.turnState.gameState = GameState.InPlay;
-    this.players[this.turnState.myOrder].score += this.mvHandlerService.processMove();
+    const score = this.mvHandlerService.processMove();
+    this.players[this.turnState.myOrder].score += score;
     this.tileRack = this.tileBagService.getTiles(this.tileRack);
     this.passCounter = 0; //Valid move; reset pass counter -- used to determine if all pass and game is over.
+    this.turnState.gameMessage = `${this.player} scored:${score}`;
     return this.updateGame();
   }
 
@@ -154,11 +169,13 @@ export class GameService {
     console.log('GameService:passmove entered')
     this.resetMove();
     this.passCounter++;
+    this.turnState.gameMessage = `${this.player} passed`;
     return this.updateGame();
   }
 
   swapTiles(selected: boolean[]): void{
     this.tileRack = this.tileBagService.swapTiles(this.tileRack, selected);
+    this.turnState.gameMessage = `${this.player} swapped ${selected.filter(x => x).length} tiles`;
     this.passMove();
   }
 

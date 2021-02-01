@@ -12,19 +12,32 @@ export class MoveSocketService {
   socket = {} as Socket;
   socketReady$!: Observable<boolean>;
   totalMovesReceived = 0;
+  id: string = '';
 
   constructor(
     private readonly socketSvc: SocketService
     ) {
     this.socketSvc.socket$.subscribe(s => this.socket = s);
     this.socketReady$ = socketSvc.socketReady$;
+
+    // Set up connect callback to rejoin room upon connect/reconnect
+    this.socketSvc.waitForSocket().then(_ => {
+      this.socket.on('connect', () => {
+        console.log('MoveSocketService:Connect Callback fired');
+        if (this.id) {
+          console.log('calling joinRoom');
+          this.socket.emit('joinRoom', { id: this.id, totalMoves: this.totalMovesReceived });
+        }
+      });
+    });
   }
 
   startGame(player: string, id: string){
+    this.id = id;
     this.socketSvc.waitForSocket().then(_ => {
       console.log('MoveSocketSvc:startGame sending:', player, id);
       this.socket.emit('startGame', {player: player, id: id});
-      });
+    });
   }
 
   async updateGame(gm: GameDTO): Promise<boolean> {

@@ -14,6 +14,7 @@ export class TileRackComponent implements OnInit {
   myTurn: boolean = false;
   tilesRemaining: number = 0;
   gameOver: boolean = false;
+  message: string = '';
 
   constructor(
     readonly gmSvc: GameService,
@@ -25,6 +26,7 @@ export class TileRackComponent implements OnInit {
       console.log(`ScoreModule:new turnState update, tiles remaining: ${v?.tilesRemaining}`);
       this.myTurn = v.myTurn;
       this.tilesRemaining = v.tilesRemaining;
+      this.message = v.gameMessage;
       (v) && (v.gameState === GameState.GameOver) && (this.gameOver = true);
     });
     this.player = this.gmSvc.player;

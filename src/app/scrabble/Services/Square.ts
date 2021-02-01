@@ -4,6 +4,7 @@ export class SquareClasses {
   tile = false;
   square = true;
   scored = false;
+  lastMove = false;
   tw = false;
   dw = false;
   tl = false;
