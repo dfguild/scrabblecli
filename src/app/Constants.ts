@@ -2,7 +2,7 @@ export const DTO_RETRIES = 4;
 export const DTO_RETRY_INTERVAL = 4; // Every Nth Pole resend the request
 export const DTO_POLL_TIME = 500;
 
-export const LAST_PLAY_STRING = 'LP,';
+export const LAST_PLAY_STRING = ',LP';
 
 export const enum BoardSquareContent {
   Letter = 0,

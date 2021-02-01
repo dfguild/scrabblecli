@@ -33,6 +33,10 @@ mat-card-actions {
   margin-bottom: 0px !important;
 }
 
+div.gameMessage {
+  margin-left: 8px;
+}
+
 button {
   flex: 1 1 0px;
 }

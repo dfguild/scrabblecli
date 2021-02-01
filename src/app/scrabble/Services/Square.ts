@@ -1,3 +1,4 @@
+import { constants } from 'buffer';
 import * as Constants from '../../Constants';
 
 export class SquareClasses {
@@ -73,7 +74,9 @@ export class Square {
       this._setMainText();
       this.sqClasses.setSquare(this._squareValue);
     }else{
-      this._setLetterValue(l);
+      const lnew = l.replace(Constants.LAST_PLAY_STRING, '');
+      if (lnew != l) {this.sqClasses.lastMove = true;}
+      this._setLetterValue(lnew);
     }
   }
 
@@ -123,6 +126,10 @@ export class Square {
   get isTile(): boolean {return this._isTile}
 
   get mainText(): string {return this._mainText}
+
+  setLastMove(): void {
+    this._letter += Constants.LAST_PLAY_STRING;
+  }
 
   private _setSquareValue(): void {
     this._squareValue = Constants.squareValues.get(`${this.row},${this.col}`) || Constants.SquareValue.NONE;

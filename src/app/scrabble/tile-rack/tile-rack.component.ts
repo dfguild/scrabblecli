@@ -37,9 +37,10 @@ export class TileRackComponent implements OnInit {
       this.gmSvc.playMove();
     } catch(e) {
       console.log(`in handleAction catch with msg: ${e.name}:${e.message}`)
-      this.snackBar.open(`${e.name}: ${e.message}`, '' , {
+      const sb = this.snackBar.open(`${e.name}: ${e.message}`, 'X' , {
         duration: 8000
       });
+
     }
   }
 

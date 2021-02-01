@@ -9,6 +9,7 @@ import { TileBagService } from './tile-bag.service';
 import { MoveSocketService } from './move-socket.service';
 import { Player } from './Player';
 import { TurnState } from './TurnState';
+import { LAST_PLAY_STRING } from '../../Constants';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,8 @@ export class GameService {
   passCounter: number = 0;
   preMoveGameDTO = {} as GameDTO;
   initialLoad: boolean = false;
+  lastMove: Square[] = []; // to reset color to normal
 
-  private playersDTO: PlayerDTO[] = []; //keep for end of game scoring
   socketReady$!: Observable<boolean>;
 
   public grid: Square[][] = [];
@@ -74,7 +75,7 @@ export class GameService {
       console.log('not an update for current game, ignoring DTO');
       return;  // update for different game;
     }
-    if (gmDTO.totalMoves <= this.turnState.totalMoves) {
+    if (gmDTO.totalMoves != 0 && gmDTO.totalMoves <= this.turnState.totalMoves) {
       console.log('not a new move, ignoring DTO');
       this.mvSocketService.totalMovesReceived = gmDTO.totalMoves; //tell socket service we got our message
       return; // No need to process
@@ -107,7 +108,6 @@ export class GameService {
 
     //process players array
     this.updatePlayers(gmDTO.players.map(p => new Player(p)));
-    this.playersDTO = gmDTO.players;
 
     (this.initialLoad) && (this.tileRack = this.assignPointValues( gmDTO.players[this.turnState.myOrder].tiles, 99 ));
     if (this.tileRack.length === 7) { this.tileRack.push(new Square('', 99, 7)) } // create 8th square to assist moving tiles around
@@ -152,6 +152,8 @@ export class GameService {
     this.tileRack = this.tileBagService.getTiles(this.tileRack);
     this.passCounter = 0; //Valid move; reset pass counter -- used to determine if all pass and game is over.
     this.turnState.gameMessage = `${this.player} scored:${score}`;
+    this.lastMove.map(sq => sq.sqClasses.lastMove = false);
+    this.currentMove.map(sq => sq.setLastMove());
     return this.updateGame();
   }
 
@@ -175,6 +177,7 @@ export class GameService {
 
   swapTiles(selected: boolean[]): void{
     this.tileRack = this.tileBagService.swapTiles(this.tileRack, selected);
+    this.passCounter = 0; //swap isn't a pass
     this.turnState.gameMessage = `${this.player} swapped ${selected.filter(x => x).length} tiles`;
     this.passMove();
   }
@@ -187,7 +190,12 @@ export class GameService {
     const success = await this.mvSocketService.updateGame(this.createGameDTO());
     if (success) this.mvHandlerService.commitMove();
 
-    return success;
+    if (success) {
+      return success;
+    } else {
+      this.processGameMoveDTO(this.preMoveGameDTO);
+      throw new Error('Unable to write to server; resetting move');
+    }
   }
 
   private incrementMove() {
@@ -208,18 +216,20 @@ export class GameService {
     }
   }
 
-  // !!FIX - DOESN'T WORK -- get points on everyone elses rack and add to my score as winner
   private updateEndOfGameScores(): void {
-    let letters: string[] = [];
-    this.playersDTO.splice(this.turnState.myOrder, 1)
-      .map(p => letters = letters.concat(p.tiles.filter(l => !(l))));
-    this.players[this.turnState.myOrder].score +=
-      this.assignPointValues(letters).map(t => t.letterValue).reduce((prev, next) => prev + next);
+    for (const p of this.preMoveGameDTO.players) {
+      if (p.order === this.turnState.myOrder) continue;
+      const rackValue = this.assignPointValues(p.tiles).map(s => s.letterValue).reduce((prev, next) => prev + next, 0);
+      console.log(`GameService:updateEndOfGameScores for player ${p.order} moving ${rackValue} points`);
+      this.players[this.turnState.myOrder].score += rackValue;
+      this.players[p.order].score -= rackValue;
+    }
   }
 
   private resetState() {
     this.updateTurnState();
     this.grid.map(r => r.map(s => s.letter=''));
+    this.lastMove = [];
     this.players=[];
     this.tileRack = [];
     this.updateGrid();
@@ -272,13 +282,30 @@ export class GameService {
     pDto.tiles = this.tileRack.map(s => s.letter);
     gDto.players.push(pDto);
 
+    if (this.turnState.gameState === GameState.GameOver) {
+      //update scores for everyone
+      for (const p of this.players) {
+        if (p.order === this.turnState.myOrder) continue;
+        const newP = new PlayerDTO();
+        newP.order = p.order;
+        newP.score = p.score;
+        gDto.players.push(newP);
+      }
+    }
+
     console.log(`GameService:createGameDTO GameDTO=${JSON.stringify(gDto)}`);
     return gDto;
   }
 
   //helper function to assign tile values to array of letters to create Tile[]
   private assignPointValues(tiles: string[], row: number = 0, scored: boolean = false ): Square[] {
-  console.log(`GameService:assignPointValues tiles=${tiles.join()} row=${row}`)
-    return tiles.map( (l, i) => new Square(l, row, i, scored));
+    console.log(`GameService:assignPointValues tiles=${tiles.join()} row=${row}`)
+    return tiles.map( (l, i) => {
+      const sq = new Square(l, row, i, scored);
+      if ( l.search(LAST_PLAY_STRING) != -1) {
+        this.lastMove.push(sq);
+      }
+      return sq;
+    });
   }
 }
