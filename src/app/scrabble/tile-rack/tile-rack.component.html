@@ -10,13 +10,24 @@
     <app-tile-holder #tileHolder></app-tile-holder>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async))" (click)="resetMoveEvent()">Recall</button>
-    <button mat-button [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async))" (click)="passMoveEvent()">Pass</button>
+    <button mat-button [disabled]="((!turnState.myTurn) ||
+      !(gmSvc.socketReady$ | async) ||
+      (tileHolder.swapTilesButtonPressed))"
+      (click)="resetMoveEvent()">Recall</button>
+    <button mat-button [disabled]="((!turnState.myTurn) ||
+      !(gmSvc.socketReady$ | async) ||
+      (tileHolder.swapTilesButtonPressed))"
+      (click)="passMoveEvent()">Pass</button>
     <button mat-button *ngIf="tileHolder.swapTilesButtonPressed"
-      [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async) || (turnState.tilesRemaining < 7))"
-      (click)="tileHolder.swapTileEventHandler()" color="accent">Swap Tiles</button>
+      [disabled]="((!turnState.myTurn) ||
+      !(gmSvc.socketReady$ | async) ||
+      (turnState.tilesRemaining < 7))"
+      (click)="tileHolder.swapTileEventHandler()"
+      color="accent">Swap Tiles</button>
     <button mat-button *ngIf="!tileHolder.swapTilesButtonPressed"
-      [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async) || (turnState.tilesRemaining < 7))"
+      [disabled]="((!turnState.myTurn) ||
+      !(gmSvc.socketReady$ | async) ||
+      (turnState.tilesRemaining < 7))"
       (click)="tileHolder.swapTileEventHandler()">Swap Tiles</button>
     <button mat-raised-button color="primary"
       [disabled]="((!turnState.myTurn)
