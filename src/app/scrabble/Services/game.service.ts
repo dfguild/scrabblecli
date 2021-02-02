@@ -65,7 +65,7 @@ export class GameService {
 
   playMove(): Promise<boolean> {
     this.game.turnState.gameState = GameState.InPlay;
-    const score = this.mvHandlerService.processMove();
+    const score = this.mvHandlerService.playMove();
     this.game.players[this.game.turnState.myOrder].score += score;
     this.game.tileRack = this.tileBagService.getTiles(this.game.tileRack);
     this.game.passCounter = 0; //Valid move; reset pass counter -- used to determine if all pass and game is over.
@@ -75,7 +75,7 @@ export class GameService {
     return this.updateGame();
   }
 
-  resetMove():void {
+  resetMove(message = true):void {
     console.log('GameService:resetMove entered')
     //Move current move tiles back to rack
     this.mvHandlerService.currentMove.forEach(sq=>{
@@ -83,13 +83,15 @@ export class GameService {
       sq.letter = '';
     });
     this.mvHandlerService.currentMove = [];
+    message && (this.game.turnState.gameMessage = '');
+    this.game.updateTurnState();
   }
 
-  passMove(): Promise<boolean> {
+  passMove(message = true): Promise<boolean> {
     console.log('GameService:passmove entered')
-    this.resetMove();
+    this.resetMove(message);
     this.game.passCounter++;
-    this.game.turnState.gameMessage = `${this.game.playerName} passed`;
+    message && (this.game.turnState.gameMessage = `${this.game.playerName} passed`);
     return this.updateGame();
   }
 
@@ -97,7 +99,7 @@ export class GameService {
     this.game.tileRack = this.tileBagService.swapTiles(this.game.tileRack, selected);
     this.game.passCounter = 0; //swap isn't a pass
     this.game.turnState.gameMessage = `${this.game.playerName} swapped ${selected.filter(x => x).length} tiles`;
-    this.passMove();
+    this.passMove(false);
   }
 
   private async updateGame(): Promise<boolean> {

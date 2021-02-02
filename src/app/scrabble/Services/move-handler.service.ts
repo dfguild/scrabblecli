@@ -46,20 +46,34 @@ export class MoveHandlerService {
     this.words=[];
   }
 
-  processMove(): number {
-    this.words = [];
+  processTileDrop(): number {
     if ( this.currentMove.length === 0 ) return 0; // handle pass
+    this.processBoard();
+    return this.totalScore();
+  }
+
+  playMove(): number {
+    if ( this.currentMove.length === 0 ) return 0; // handle pass
+    this.processBoard();
+    this.checkWords();
+
+    console.log(`MoveHandler:playMove - found words: ${this.words.join()}`);
+    return this.totalScore();
+  }
+
+  private processBoard(): void {
+    this.words = [];
     if (this.gm.turnState.turn === 0 && !this.gm.grid[7][7].isTile) {
-      throw('Invalid First Move: Must play using center square');
+      throw new Error('Invalid First Move: Must play using center square');
     }
     this.setMoveDirection();
     this.sortMove();
     this.isMoveContiguous();
     this.findWords();
-    this.checkWords();
+  }
 
-    console.log(`MoveHandler:processMove - found words: ${this.words.join()}`);
-    return this.words.map(o=>o.score).reduce( (a, b) => a+b);
+  private totalScore(): number {
+    return (this.words.length > 0) ? this.words.map(o=>o.score).reduce((a, b) => a+b) : 0;
   }
 
   private setMoveDirection(): void {
@@ -77,7 +91,7 @@ export class MoveHandlerService {
         throw new Error('Invalid Move: Tiles must be in a line')
       };
     } else {
-      throw new Error('Invalid Move');
+      throw new Error('Invalid Move: Tiles must be in a line');
     }
   }
 

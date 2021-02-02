@@ -4,9 +4,9 @@
       <span class="tileRemaining">{{turnState.tilesRemaining}} Tiles Remain</span>
   </div>
   <mat-card-content>
-    <h3 *ngIf="turnState.myTurn" [class.myturn]="turnState.myTurn">Your Turn</h3>
-    <h3 *ngIf="turnState.gameState != GameState.GameOver" [class.myturn]="turnState.myTurn">Game Over</h3>
-    <h3 *ngIf="!turnState.myTurn && turnState.gameState != GameState.GameOver"></h3>
+    <h3 *ngIf="turnState.myTurn && turnState.gameState != GameState.GameOver" [class.myturn]="turnState.myTurn">Your Turn</h3>
+    <h3 *ngIf="turnState.gameState === GameState.GameOver" [class.myturn]="turnState.myTurn">Game Over</h3>
+    <h3 *ngIf="!turnState.myTurn && turnState.gameState != GameState.GameOver"> </h3>
     <app-tile-holder #tileHolder></app-tile-holder>
   </mat-card-content>
   <mat-card-actions>

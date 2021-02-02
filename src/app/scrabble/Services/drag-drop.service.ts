@@ -68,6 +68,7 @@ export class DragDropService {
       this.gm.updateGrid();
       this.mvSvc.currentMove = this.removeTile(this.mvSvc.currentMove, fromRow, fromCol);
     }
+    this.createMessage();
     this.mvSvc.currentMove.map(s=>console.log(`sq: ${s.letter}-${s.row}-${s.col} `));
   }
 
@@ -111,6 +112,20 @@ export class DragDropService {
     if (this.blankDropped) {
       this.blankDropped.setBlank(l);
     }
+  }
+
+  createMessage() {
+    try {
+      const score = this.mvSvc.processTileDrop();
+      this.gm.turnState.gameMessage = `${score} points`;
+    } catch(e) {
+      if (e instanceof Error) {
+        this.gm.turnState.gameMessage = e.message;
+      } else {
+        throw(e);
+      }
+    }
+    this.gm.updateTurnState();
   }
 
   private removeTile(arr: Square[], row: number, col: number): Square[] {
