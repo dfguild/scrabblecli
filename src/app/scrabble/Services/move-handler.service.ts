@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameService } from './game.service';
+import { Game } from './Game';
 import { Square } from './Square';
 import WordList from '../../../assets/words_dictionary.json';
 
@@ -26,7 +26,7 @@ export class MoveHandlerService {
 
   mvDir: DIR = DIR.H;
   words: Word[] = [];
-  gm!: GameService;
+  gm!: Game;
   currentMove: Square[] = [];
   mvStart!: Square;
   mvEnd!: Square;
@@ -34,7 +34,7 @@ export class MoveHandlerService {
 
   constructor() {}
 
-  setGameService(gm: GameService): void {
+  setGameObject(gm: Game): void {
     this.gm = gm;
   }
 

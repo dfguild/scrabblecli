@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { GameService } from './game.service';
+import { Game } from './Game';
 import { Square } from './Square';
 import { MoveHandlerService } from './move-handler.service';
 
@@ -9,12 +9,12 @@ import { MoveHandlerService } from './move-handler.service';
 })
 export class DragDropService {
 
-  gm!: GameService;
+  gm!: Game;
   blankDropped: Square | null = null;
 
   constructor(private readonly mvSvc: MoveHandlerService) {}
 
-  setGameService(gm: GameService): void {
+  setGameObject(gm: Game): void {
     this.gm = gm;
   }
 

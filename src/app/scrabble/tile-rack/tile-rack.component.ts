@@ -31,7 +31,7 @@ export class TileRackComponent implements OnInit {
       this.message = v.gameMessage;
       (v) && (v.gameState === GameState.GameOver) && (this.gameOver = true);
     });
-    this.player = this.gmSvc.player;
+    this.player = this.gmSvc.game.playerName;
   }
 
   playMoveEvent(): void {
