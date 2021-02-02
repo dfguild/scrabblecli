@@ -27,6 +27,7 @@ export class MoveHandlerService {
   mvDir: DIR = DIR.H;
   words: Word[] = [];
   gm!: GameService;
+  currentMove: Square[] = [];
   mvStart!: Square;
   mvEnd!: Square;
   validWords: string[] = [];
@@ -38,16 +39,16 @@ export class MoveHandlerService {
   }
 
   commitMove(): void{
-    for ( let s of this.gm.currentMove ) {
+    for ( let s of this.currentMove ) {
       s.isScored = true;
     }
-    this.gm.currentMove=[];
+    this.currentMove=[];
     this.words=[];
   }
 
   processMove(): number {
     this.words = [];
-    if ( this.gm.currentMove.length === 0 ) return 0; // handle pass
+    if ( this.currentMove.length === 0 ) return 0; // handle pass
     if (this.gm.turnState.turn === 0 && !this.gm.grid[7][7].isTile) {
       throw('Invalid First Move: Must play using center square');
     }
@@ -62,17 +63,17 @@ export class MoveHandlerService {
   }
 
   private setMoveDirection(): void {
-    if (this.gm.currentMove.length === 1) {
+    if (this.currentMove.length === 1) {
       this.mvDir = DIR.H;
-    } else if (this.gm.currentMove[0].row === this.gm.currentMove[1].row) {
+    } else if (this.currentMove[0].row === this.currentMove[1].row) {
       this.mvDir = DIR.H
-      if(!this.gm.currentMove.every(s => s.row === this.gm.currentMove[0].row)) {
-        this.gm.currentMove.map(s => console.log(`Thinks invalid Horiz move with ${s.letter} ${s.row} ${s.col}`))
+      if(!this.currentMove.every(s => s.row === this.currentMove[0].row)) {
+        this.currentMove.map(s => console.log(`Thinks invalid Horiz move with ${s.letter} ${s.row} ${s.col}`))
         throw new Error('Invalid Move: Tiles must be in a line')
       };
-    } else if ( this.gm.currentMove[0].col === this.gm.currentMove[1].col) {
+    } else if ( this.currentMove[0].col === this.currentMove[1].col) {
       this.mvDir = DIR.V;
-      if(!this.gm.currentMove.every(s => s.col === this.gm.currentMove[0].col)) {
+      if(!this.currentMove.every(s => s.col === this.currentMove[0].col)) {
         throw new Error('Invalid Move: Tiles must be in a line')
       };
     } else {
@@ -81,7 +82,7 @@ export class MoveHandlerService {
   }
 
   private isMoveContiguous(): void {
-    const moveSize = this.gm.currentMove.length;
+    const moveSize = this.currentMove.length;
     if ( moveSize === 1) return;
     if (this.mvDir === DIR.H) {
       for (let i = this.mvStart.col; i <= this.mvEnd.col; i++) {
@@ -95,15 +96,15 @@ export class MoveHandlerService {
   }
 
   private sortMove(): void {
-    if (this.gm.currentMove.length != 1) {
+    if (this.currentMove.length != 1) {
       if (this.mvDir === DIR.H) {
-        this.gm.currentMove.sort((a,b) => a.col - b.col);
+        this.currentMove.sort((a,b) => a.col - b.col);
       } else {
-        this.gm.currentMove.sort((a,b) => a.row - b.row);
+        this.currentMove.sort((a,b) => a.row - b.row);
       }
     }
-    this.mvStart = this.gm.currentMove[0];
-    this.mvEnd = this.gm.currentMove[this.gm.currentMove.length - 1];
+    this.mvStart = this.currentMove[0];
+    this.mvEnd = this.currentMove[this.currentMove.length - 1];
   }
 
   findWords() {
@@ -111,7 +112,7 @@ export class MoveHandlerService {
     if (word) this.words.push(word);
 
     let dir = this.mvDir == DIR.H ? DIR.V : DIR.H; //look crosswise
-    for (let s of this.gm.currentMove) {
+    for (let s of this.currentMove) {
       word = this.findWord(s, dir);
       if (word) this.words.push(word);
     }
@@ -156,7 +157,7 @@ export class MoveHandlerService {
     }
     console.log(`MoveHandler:scoreWord - multiplying ${word.score} by ${wordBonusMultiplier}`)
     word.score *= wordBonusMultiplier;
-    word.score += (this.gm.currentMove.length === 7) ? 50 : 0;
+    word.score += (this.currentMove.length === 7) ? 50 : 0;
     return word;
   }
 

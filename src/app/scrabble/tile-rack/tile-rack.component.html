@@ -22,7 +22,7 @@
       [disabled]="((!myTurn)
         || !(gmSvc.socketReady$ | async )
         || (tileHolder.swapTilesButtonPressed)
-        || (gmSvc.currentMove.length === 0))"
+        || (mvSvc.currentMove.length === 0))"
       (click)="playMoveEvent()">Play</button>
   </mat-card-actions>
 </mat-card>

@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { GameService } from './game.service';
 import { Square } from './Square';
-
-
+import { MoveHandlerService } from './move-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ export class DragDropService {
   gm!: GameService;
   blankDropped: Square | null = null;
 
-  constructor() {}
+  constructor(private readonly mvSvc: MoveHandlerService) {}
 
   setGameService(gm: GameService): void {
     this.gm = gm;
@@ -47,7 +46,7 @@ export class DragDropService {
       this.gm.tileRack[fromCol].letter = '';
       this.gm.updateTileRack();
       this.gm.updateGrid();
-      this.gm.currentMove.push(this.gm.grid[toRow][toCol]);
+      this.mvSvc.currentMove.push(this.gm.grid[toRow][toCol]);
 
     } else if ( fromSource === "BD" && toSource === 'BD'){
       if (!this.gm.turnState.myTurn) return;
@@ -56,8 +55,8 @@ export class DragDropService {
       this.blankDropped = this.gm.grid[toRow][toCol].isBlank ? this.gm.grid[toRow][toCol] : null;
       this.gm.grid[fromRow][fromCol].letter = '';
       this.gm.updateGrid();
-      this.gm.currentMove.push(this.gm.grid[toRow][toCol]);
-      this.gm.currentMove = this.removeTile(this.gm.currentMove, fromRow, fromCol);
+      this.mvSvc.currentMove.push(this.gm.grid[toRow][toCol]);
+      this.mvSvc.currentMove = this.removeTile(this.mvSvc.currentMove, fromRow, fromCol);
 
     } else if ( fromSource === "BD" && toSource === 'TR') {
       let letter = this.gm.grid[fromRow][fromCol].letter[0]; // reset to blank if ? + Letter
@@ -67,9 +66,9 @@ export class DragDropService {
       }
       this.gm.updateTileRack();
       this.gm.updateGrid();
-      this.gm.currentMove = this.removeTile(this.gm.currentMove, fromRow, fromCol);
+      this.mvSvc.currentMove = this.removeTile(this.mvSvc.currentMove, fromRow, fromCol);
     }
-this.gm.currentMove.map(s=>console.log(`sq: ${s.letter}-${s.row}-${s.col} `));
+    this.mvSvc.currentMove.map(s=>console.log(`sq: ${s.letter}-${s.row}-${s.col} `));
   }
 
   public insertShiftTileRight(toCol: number, letter: string): boolean {

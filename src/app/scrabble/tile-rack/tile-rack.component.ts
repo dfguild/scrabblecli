@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GameState } from '../services/Game-dto';
+import { MoveHandlerService } from '../services/move-handler.service';
 
 @Component({
   selector: 'app-tile-rack',
@@ -18,6 +19,7 @@ export class TileRackComponent implements OnInit {
 
   constructor(
     readonly gmSvc: GameService,
+    readonly mvSvc: MoveHandlerService,
     private readonly snackBar: MatSnackBar,
   ) { }
 

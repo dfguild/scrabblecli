@@ -42,8 +42,6 @@ export class GameService {
   private playersSubject = new BehaviorSubject<Player[]>([]);
   public players$ = this.playersSubject.asObservable();
 
-  public currentMove: Square[] = [];
-
   constructor(
     private readonly dragDropService: DragDropService,
     private readonly mvHandlerService: MoveHandlerService,
@@ -153,18 +151,18 @@ export class GameService {
     this.passCounter = 0; //Valid move; reset pass counter -- used to determine if all pass and game is over.
     this.turnState.gameMessage = `${this.player} scored:${score}`;
     this.lastMove.map(sq => sq.sqClasses.lastMove = false);
-    this.currentMove.map(sq => sq.setLastMove());
+    this.mvHandlerService.currentMove.map(sq => sq.setLastMove());
     return this.updateGame();
   }
 
   resetMove():void {
     console.log('GameService:resetMove entered')
     //Move current move tiles back to rack
-    this.currentMove.forEach(sq=>{
+    this.mvHandlerService.currentMove.forEach(sq=>{
       this.dragDropService.insertShiftTileRight(0, sq.letter[0]);
       sq.letter = '';
     });
-    this.currentMove = [];
+    this.mvHandlerService.currentMove = [];
   }
 
   passMove(): Promise<boolean> {
