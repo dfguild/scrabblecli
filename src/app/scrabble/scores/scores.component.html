@@ -2,11 +2,12 @@
   <mat-card-header>
     {{gmSvc.game.gameName}}
   </mat-card-header>
-  <mat-card-content class="playerContainer">
-    <mat-card *ngFor="let player of players; index as i; last as last" class="playerItem" [class.winner]="isWinner(i)">
+  <mat-card-content class="playerContainer" *ngIf="(gmSvc.turnState$ | async); let turnState">
+    <mat-card *ngFor="let player of (gmSvc.players$ | async); index as i; last as last"
+      class="playerItem" [class.winner]="((i === turnState.turn) && (turnState.gameState === GameState.GameOver))">
       <mat-card-content class="detailsContainer">
-        <span class="name" [class.turn]="i === turn">{{player.playerName | titlecase}}</span>
-        <span class="score" [class.turn]="i === turn">{{player.score}}</span>
+        <span class="name" [class.turn]="i === turnState.turn">{{player.playerName | titlecase}}</span>
+        <span class="score" [class.turn]="i === turnState.turn">{{player.score}}</span>
       </mat-card-content>
     </mat-card>
   </mat-card-content>

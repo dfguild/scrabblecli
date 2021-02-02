@@ -11,29 +11,14 @@ import { GameService } from '../services/game.service';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit {
-
-  gridSquares: Square[][] = [];
+export class BoardComponent {
   blankLetter: string = 'None';
-  loading = true;
-  myTurn = false;
 
   constructor(
     private readonly ddSvc: DragDropService,
-    private readonly gmSvc: GameService,
+    readonly gmSvc: GameService,
     public dialog: MatDialog,
   ) { }
-
-  ngOnInit(): void {
-    this.gmSvc.grid$.subscribe((g) => {
-      console.log(`BEFORE this.loadingMessage = ${this.loading}`)
-      this.loading = (g?.length !== 15);
-      console.log(`AFTER this.loadingMessage = ${this.loading} - Updating grid with ${g.length} rows`)
-      this.gridSquares = g;
-    });
-
-    this.gmSvc.turnState$.subscribe(ts => this.myTurn = ts.myTurn);
-  }
 
   dropped(event: CdkDragDrop<string>): void {
     this.ddSvc.tileDrop(event);

@@ -1,16 +1,12 @@
-<div class="container" *ngIf="loading; else loaded">
-  <app-loading></app-loading>
-</div>
-
-<ng-template #loaded>
-  <div class="board">
-    <ng-container *ngFor="let row of gridSquares">
-      <ng-container *ngFor="let square of row">
-        <div cdkDropList
+<div class="board" *ngIf="gmSvc.grid$ | async as grid; else loading">
+  <ng-container *ngFor="let row of grid">
+    <ng-container *ngFor="let square of row">
+      <div cdkDropList
+        *ngIf="gmSvc.turnState$ | async as turnState"
         class="boarddrop"
         [cdkDropListData]="'BD' + square.row + ',' + square.col"
         [cdkDropListSortingDisabled]="true"
-        [cdkDropListDisabled]="!myTurn"
+        [cdkDropListDisabled]="!turnState.myTurn"
         (cdkDropListDropped)="dropped($event)">
           <div [ngClass]="square.sqClasses" cdkDrag [cdkDragData]="'BD' + square.row + ',' + square.col"
             [cdkDragDisabled]="!square.isTile || square.isScored">
@@ -22,8 +18,13 @@
             </span>
             <div *cdkDragPlaceholder></div>
           </div>
-        </div>
-      </ng-container>
+      </div>
     </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #loading>
+  <div class="container">
+    <app-loading></app-loading>
   </div>
 </ng-template>

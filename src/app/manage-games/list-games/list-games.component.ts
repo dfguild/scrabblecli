@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { GameListDTO, GameListItem } from '../Services/Game-List.dto';
 import { ManageGamesSocketService } from '../Services/manage-games-socket.service';
@@ -22,12 +23,13 @@ interface MyGameListItem extends GameListItem {
   templateUrl: './list-games.component.html',
   styleUrls: ['./list-games.component.css']
 })
-export class ListGamesComponent {
+export class ListGamesComponent implements OnDestroy {
 
   games: MyGameListItem[] = [];
   gameStateMessage: string[] = [];
   gamesRequested = false;
   myGameStatus = MyGameStatus;
+  subscription!: Subscription;
 
   constructor(
     readonly manageGamesSvc: ManageGamesSocketService,
@@ -38,11 +40,15 @@ export class ListGamesComponent {
     this.gameStateMessage[GameState.GameOver] = 'Game Over';
   }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
   getGames(): boolean {
     if (!this.gamesRequested) {
       console.log('In ListGamesComponents getGames - subscribing to getGames$');
       this.manageGamesSvc.getGames();
-      this.manageGamesSvc.getGames$().subscribe(games => {
+      this.subscription = this.manageGamesSvc.getGames$().subscribe(games => {
         console.log(`got update with ${games.length} games`);
         this.processGames(games);
       });

@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { Square } from '../../services/Square';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/drag-drop.service';
 import { GameService } from '../../services/game.service';
-
+import { Square } from '../../services/Square';
 
 @Component({
   selector: 'app-tile-holder',
   templateUrl: './tile-holder.component.html',
   styleUrls: ['./tile-holder.component.css']
 })
-export class TileHolderComponent implements OnInit {
+export class TileHolderComponent implements OnInit, OnDestroy {
 
   tiles: Square[] = [];
   swapTilesButtonPressed = false;
   swapTilesSelected: boolean[] = [];
+  subscription!: Subscription;
 
   constructor(
     private readonly ddSvc: DragDropService,
@@ -26,10 +27,14 @@ export class TileHolderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gmSvc.tileRack$.subscribe(v => {
+    this.subscription = this.gmSvc.tileRack$.subscribe(v => {
       v.map(v=>console.log(`tileRack update letter=${v.letter}`));
       this.tiles = v
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   swapTileEventHandler(): void {

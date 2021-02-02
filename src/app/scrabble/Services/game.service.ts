@@ -120,7 +120,16 @@ export class GameService {
 
   private incrementMove() {
     this.game.turnState.totalMoves++;
-    if (this.game.turnState.gameState != GameState.GameOver) {
+    if (this.game.turnState.gameState === GameState.GameOver) {
+      let max = 0; let winner = -1;
+      this.game.players.map((p, i) => {
+        if (p.score > max) {
+          max = p.score;
+          winner = i;
+        }
+      })
+      this.game.turnState.turn = winner;
+    } else {
       this.game.turnState.turn = ((this.game.turnState.turn + 1) % this.game.players.length);
     }
   }

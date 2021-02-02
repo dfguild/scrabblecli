@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GameState } from '../services/Game-dto';
@@ -9,30 +9,14 @@ import { MoveHandlerService } from '../services/move-handler.service';
   templateUrl: './tile-rack.component.html',
   styleUrls: ['./tile-rack.component.css']
 })
-export class TileRackComponent implements OnInit {
-
-  player: string = '';
-  myTurn: boolean = false;
-  tilesRemaining: number = 0;
-  gameOver: boolean = false;
-  message: string = '';
+export class TileRackComponent {
+  GameState = GameState;
 
   constructor(
     readonly gmSvc: GameService,
     readonly mvSvc: MoveHandlerService,
     private readonly snackBar: MatSnackBar,
   ) { }
-
-  ngOnInit(): void {
-    this.gmSvc.turnState$.subscribe(v => {
-      console.log(`ScoreModule:new turnState update, tiles remaining: ${v?.tilesRemaining}`);
-      this.myTurn = v.myTurn;
-      this.tilesRemaining = v.tilesRemaining;
-      this.message = v.gameMessage;
-      (v) && (v.gameState === GameState.GameOver) && (this.gameOver = true);
-    });
-    this.player = this.gmSvc.game.playerName;
-  }
 
   playMoveEvent(): void {
     try {

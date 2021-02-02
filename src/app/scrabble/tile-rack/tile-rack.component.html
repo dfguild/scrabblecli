@@ -1,31 +1,31 @@
-<mat-card class="tilerack">
+<mat-card class="tilerack" *ngIf="(gmSvc.turnState$ | async); let turnState">
   <div class="titleContainer">
-      <span class="playerName">{{player | titlecase}}</span>
-      <span class="tileRemaining">{{tilesRemaining}} Tiles Remain</span>
+      <span class="playerName">{{gmSvc.game.playerName | titlecase}}</span>
+      <span class="tileRemaining">{{turnState.tilesRemaining}} Tiles Remain</span>
   </div>
   <mat-card-content>
-    <h3 *ngIf="myTurn" [class.myturn]="myTurn">Your Turn</h3>
-    <h3 *ngIf="gameOver" [class.myturn]="myTurn">Game Over</h3>
-    <h3 *ngIf="!myTurn && !gameOver"></h3>
+    <h3 *ngIf="turnState.myTurn" [class.myturn]="turnState.myTurn">Your Turn</h3>
+    <h3 *ngIf="turnState.gameState != GameState.GameOver" [class.myturn]="turnState.myTurn">Game Over</h3>
+    <h3 *ngIf="!turnState.myTurn && turnState.gameState != GameState.GameOver"></h3>
     <app-tile-holder #tileHolder></app-tile-holder>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async))" (click)="resetMoveEvent()">Recall</button>
-    <button mat-button [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async))" (click)="passMoveEvent()">Pass</button>
+    <button mat-button [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async))" (click)="resetMoveEvent()">Recall</button>
+    <button mat-button [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async))" (click)="passMoveEvent()">Pass</button>
     <button mat-button *ngIf="tileHolder.swapTilesButtonPressed"
-      [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async) || (tilesRemaining < 7))"
+      [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async) || (turnState.tilesRemaining < 7))"
       (click)="tileHolder.swapTileEventHandler()" color="accent">Swap Tiles</button>
     <button mat-button *ngIf="!tileHolder.swapTilesButtonPressed"
-      [disabled]="((!myTurn) || !(gmSvc.socketReady$ | async) || (tilesRemaining < 7))"
+      [disabled]="((!turnState.myTurn) || !(gmSvc.socketReady$ | async) || (turnState.tilesRemaining < 7))"
       (click)="tileHolder.swapTileEventHandler()">Swap Tiles</button>
     <button mat-raised-button color="primary"
-      [disabled]="((!myTurn)
+      [disabled]="((!turnState.myTurn)
         || !(gmSvc.socketReady$ | async )
         || (tileHolder.swapTilesButtonPressed)
         || (mvSvc.currentMove.length === 0))"
       (click)="playMoveEvent()">Play</button>
   </mat-card-actions>
 </mat-card>
-<div class="gameMessage">
-  {{message | titlecase}}
+<div class="gameMessage" *ngIf="(gmSvc.turnState$ | async); let turnState">
+  {{turnState.gameMessage | titlecase}}
 </div>
