@@ -82,7 +82,7 @@ export class GameService {
       this.dragDropService.insertShiftTileRight(0, sq.letter[0]);
       sq.letter = '';
     });
-    this.mvHandlerService.currentMove = [];
+    this.mvHandlerService.resetMoveState();
     message && (this.game.turnState.gameMessage = '');
     this.game.updateTurnState();
   }
@@ -108,14 +108,14 @@ export class GameService {
     this.game.turnState.tilesRemaining = this.tileBagService.tileBag.length;
     this.game.updateTurnState(); //send to disable buttons until new DTO received
     const success = await this.mvSocketService.updateGame(this.game.createGameDTO());
-    if (success) this.mvHandlerService.commitMove();
-
     if (success) {
+      this.mvHandlerService.commitMove();
       this.game.updatePlayers();  //update the scores since no longer processing my own DTO
       this.game.updateGrid();
       return success;
     } else {
       this.game.revertMove();
+      this.mvHandlerService.resetMoveState();
       throw new Error('Unable to write to server; resetting move');
     }
   }

@@ -38,12 +38,17 @@ export class MoveHandlerService {
     this.gm = gm;
   }
 
+  resetMoveState(resetMove = true) {
+    this.words = [];
+    resetMove && (this.currentMove = []);
+    this.validWords = [];
+  }
+
   commitMove(): void{
     for ( let s of this.currentMove ) {
       s.isScored = true;
     }
-    this.currentMove=[];
-    this.words=[];
+    this.resetMoveState();
   }
 
   processTileDrop(): number {
@@ -62,7 +67,7 @@ export class MoveHandlerService {
   }
 
   private processBoard(): void {
-    this.words = [];
+    this.resetMoveState(false);
     if (this.gm.turnState.turn === 0 && !this.gm.grid[7][7].isTile) {
       throw new Error('Invalid First Move: Must play using center square');
     }
