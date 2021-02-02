@@ -132,7 +132,7 @@ export class GameService {
 
     this.tileBagService.tileBag = this.assignPointValues(gmDTO.remainingTiles);
     this.turnState.tilesRemaining = this.tileBagService.tileBag.length;
-    console.log(`GameService:processDto - setting turnState tileBag length to:${this.turnState.tilesRemaining}`);
+    console.log(`GameService:processGameJoins - setting turnState tileBag length to:${this.turnState.tilesRemaining}`);
 
     this.turnState.turn = gmDTO.turn;
     if (!this.turnState.myTurn) {
@@ -185,12 +185,14 @@ export class GameService {
   private async updateGame(): Promise<boolean> {
     this.checkGameOver();
     this.incrementMove();
+    this.turnState.tilesRemaining = this.tileBagService.tileBag.length;
     this.updateTurnState(); //send to disable buttons until new DTO received
-
     const success = await this.mvSocketService.updateGame(this.createGameDTO());
     if (success) this.mvHandlerService.commitMove();
 
     if (success) {
+      this.updatePlayers();  //update the scores since no longer processing my own DTO
+      this.updateGrid();
       return success;
     } else {
       this.processGameMoveDTO(this.preMoveGameDTO);
