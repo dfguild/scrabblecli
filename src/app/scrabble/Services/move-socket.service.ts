@@ -19,6 +19,19 @@ export class MoveSocketService {
     ) {
     this.socketSvc.socket$.subscribe(s => this.socket = s);
     this.socketReady$ = socketSvc.socketReady$;
+  }
+
+  onExit() {
+    console.log('MoveSocketService:onExit removing connect listener')
+    this.socket.removeListener('connect');
+  }
+
+  startGame(player: string, id: string){
+    this.id = id;
+    this.socketSvc.waitForSocket().then(_ => {
+      console.log('MoveSocketSvc:startGame sending:', player, id);
+      this.socket.emit('startGame', {player: player, id: id});
+    });
 
     // Set up connect callback to rejoin room upon connect/reconnect
     this.socketSvc.waitForSocket().then(_ => {
@@ -29,14 +42,6 @@ export class MoveSocketService {
           this.socket.emit('joinRoom', { id: this.id, totalMoves: this.totalMovesReceived });
         }
       });
-    });
-  }
-
-  startGame(player: string, id: string){
-    this.id = id;
-    this.socketSvc.waitForSocket().then(_ => {
-      console.log('MoveSocketSvc:startGame sending:', player, id);
-      this.socket.emit('startGame', {player: player, id: id});
     });
   }
 

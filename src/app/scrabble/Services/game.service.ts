@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { GameState } from './Game-dto';
 import { MoveHandlerService } from './move-handler.service';
@@ -19,6 +19,8 @@ export class GameService {
   game: Game;
 
   socketReady$!: Observable<boolean>;
+  gameJoinSubscription!: Subscription;
+  gameUpdateSubscription!: Subscription;
 
   constructor(
     private readonly dragDropService: DragDropService,
@@ -30,12 +32,14 @@ export class GameService {
       this.mvHandlerService.setGameObject(this.game);
       this.dragDropService.setGameObject(this.game);
       this.socketReady$ = mvSocketService.socketReady$;
-      this.mvSocketService.getGameDTO().subscribe(g => this.game.gameDtoEventHandler(g));
-      this.mvSocketService.getGameJoinUpdates().subscribe(g => {
-        this.game.processGameJoins(g);
-        if (!this.game.turnState.myTurn) this.resetMove();
-      });
     }
+
+  onExit() {
+    console.log(`GameSvc:onExit cleaning up, unsubscribing to listeners`)
+    this.gameJoinSubscription.unsubscribe();
+    this.gameUpdateSubscription.unsubscribe();
+    this.mvSocketService.onExit();
+  }
 
   get grid$(): Observable<Square[][]> {
     return this.game.grid$;
@@ -62,6 +66,11 @@ export class GameService {
     this.game.id = id;
     this.game.turnState.gameState = GameState.InPlay;
     console.log(`GameService:startGame calling startGame on SocketSvc with player: ${player} and id: ${id}`);
+    this.gameUpdateSubscription = this.mvSocketService.getGameDTO().subscribe(g => this.game.gameDtoEventHandler(g));
+    this.gameJoinSubscription = this.mvSocketService.getGameJoinUpdates().subscribe(g => {
+      this.game.processGameJoins(g);
+      if (!this.game.turnState.myTurn) this.resetMove();
+    });
     this.mvSocketService.startGame(player, id);
   }
 

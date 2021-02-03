@@ -23,6 +23,17 @@ export class ManageGamesSocketService {
     console.log(`ManageGamesSocketSvc:constructor Calling setup socket`);
     this.setUpSocket();
     this.socketReady$ = this.socketSvc.socketReady$;
+
+    // Set up connect callback to rejoin room upon connect/reconnect
+    this.socketSvc.waitForSocket().then(_ => {
+      this.socket.on('connect', () => {
+        console.log('ManageGamesSocketSvc:Connect Callback fired');
+        if (this.id) {
+          console.log('calling getGames');
+          this.getGames();
+        }
+      });
+    });
   }
 
   async setUpSocket() {
@@ -30,6 +41,10 @@ export class ManageGamesSocketService {
     this.socketSvc.socket$.subscribe(s => this.socket = s);
     await this.socketSvc.waitForSocket();
     console.log(`ManageGamesSocketSvc:setUpSocket exiting socket=${this.socket}`);
+  }
+
+  onExit() {
+    this.socket.removeListener('connect');
   }
 
   createGame(gameName: string): void {

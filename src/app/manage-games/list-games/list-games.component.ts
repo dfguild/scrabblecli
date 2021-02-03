@@ -43,6 +43,7 @@ export class ListGamesComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.manageGamesSvc.onExit();
   }
 
   getGames(): boolean {
