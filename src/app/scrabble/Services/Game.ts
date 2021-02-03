@@ -45,7 +45,7 @@ export class Game {
 
   //Received an update from the Server with a new move (including this players)
   gameDtoEventHandler(gmDTO: GameDTO) {
-    console.log(`GameService:processDTO with ${JSON.stringify(gmDTO)}`);
+    console.log(`GameService:gameDtoEventHandler with ${JSON.stringify(gmDTO)}`);
     if (gmDTO.id != this.id) {
       console.log('not an update for current game, ignoring DTO');
     } else if (gmDTO.totalMoves > this.turnState.totalMoves || this.initialLoad) {
@@ -58,7 +58,7 @@ export class Game {
   }
 
   private processGameMoveDTO(gmDTO: GameDTO) {
-    console.log(`GameService:processDTO with ${JSON.stringify(gmDTO)}`);
+    console.log(`GameService:processDTO starting to process DTO`);
     this.preMoveGameDTO = gmDTO;
     let myOrder: number|undefined;
     if (this.initialLoad) {
