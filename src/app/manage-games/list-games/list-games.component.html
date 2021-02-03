@@ -1,21 +1,22 @@
 <mat-list>
   <ng-container *ngIf="((manageGamesSvc.socketReady$ | async)? getGames() : false )">
-    <mat-list-item class="gameRow" *ngFor="let game of games; index as i; last as last">
-      <span class="name">{{game.gameName}}</span>
-      <span class="players" [innerHTML]="getPlayerList(i)"></span>
-      <span class="turn">{{gameStateMessage[game.gameState]}}</span>
-      <span class="action" *ngIf="(game.myGameStatus === myGameStatus.CanBeJoined)">
-        <a mat-button class="button">
-          <mat-icon mat-list-icon (click)="joinGame(game.id)">person_add</mat-icon>
-        </a>
-      </span>
-      <span class="action" *ngIf="((game.myGameStatus === myGameStatus.MyActiveGame) ||
-        (game.myGameStatus === myGameStatus.MyCompleteGame))">
-        <a mat-button class="button">
-          <mat-icon mat-list-icon (click)="startGame(game.id)" >launch</mat-icon>
-        </a>
-      </span>
-      <mat-divider *ngIf="!last"></mat-divider>
+    <mat-list-item class="gameRow" [class.gameover]="game.gameState === GameState.GameOver"
+      *ngFor="let game of games; index as i; last as last">
+        <span class="name">{{game.gameName}}</span>
+        <span class="players" [innerHTML]="getPlayerList(i)"></span>
+        <span class="turn">{{gameStateMessage[game.gameState]}}</span>
+        <span class="action" *ngIf="(game.myGameStatus === myGameStatus.CanBeJoined)">
+          <a mat-button class="button">
+            <mat-icon mat-list-icon (click)="joinGame(game.id)">person_add</mat-icon>
+          </a>
+        </span>
+        <span class="action" *ngIf="((game.myGameStatus === myGameStatus.MyActiveGame) ||
+          (game.myGameStatus === myGameStatus.MyCompleteGame))">
+          <a mat-button class="button">
+            <mat-icon mat-list-icon (click)="startGame(game.id)" >launch</mat-icon>
+          </a>
+        </span>
+        <mat-divider *ngIf="!last"></mat-divider>
     </mat-list-item>
   </ng-container>
 </mat-list>

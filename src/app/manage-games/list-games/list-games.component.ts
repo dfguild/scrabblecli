@@ -30,6 +30,7 @@ export class ListGamesComponent implements OnDestroy {
   gamesRequested = false;
   myGameStatus = MyGameStatus;
   subscription!: Subscription;
+  GameState = GameState;
 
   constructor(
     readonly manageGamesSvc: ManageGamesSocketService,
@@ -71,6 +72,14 @@ export class ListGamesComponent implements OnDestroy {
       myGame.myGameStatus = status;
       this.games.push(myGame);
     }
+    this.games.sort((a, b) => {
+      const order = a.gameState - b.gameState;
+      if (order === 0) {
+        return a.totalMoves - b.totalMoves;
+      } else {
+        return order;
+      }
+    })
   }
 
   joinGame(id: string): void {

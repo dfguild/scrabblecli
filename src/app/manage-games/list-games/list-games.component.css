@@ -26,6 +26,10 @@ h2 {
   text-align: center;
 }
 
+mat-list-item.gameover {
+  background-color: rgb(247, 247, 247);
+}
+
 @media (max-width: 775px) {
   .mat-list-item.gameRow {
     font-size: 13px;
