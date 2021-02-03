@@ -12,17 +12,6 @@ import { Square } from './services/Square';
 })
 export class ScrabbleComponent implements OnInit {
 
-  loadingMessage: boolean = true;
-  public player = '';
-  public id = '';
-  public gameName = '';
-  public gridSquares: Square[][] = [];
-  public tileRack: Square[] = [];
-  public turn: number = 0;
-  public players: Player[] = [];
-  public myPlayerNum = 0;
-  public myTurn = false;
-
   constructor(
     public readonly manageGameSocketSvc: ManageGamesSocketService,
     private readonly gameSvc: GameService,
@@ -30,21 +19,15 @@ export class ScrabbleComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.player = this.manageGameSocketSvc.player;
-    this.id = this.manageGameSocketSvc.id;
+    const player = this.manageGameSocketSvc.player;
+    const id = this.manageGameSocketSvc.id;
 
-    if (this.player === '' || this.id === '') {
+    if (player === '' || id === '') {
       this.router.navigateByUrl('/signon');
       return;
     }
 
-    console.log(`ScabbleComponent:OnInit - calling startGame with pl=${this.player} gm=${this.id}`);
-    this.gameSvc.startGame(this.player, this.id);
-    this.gameSvc.tileRack$.subscribe(v => this.tileRack = v);
-  }
-
-  gotoGames(): void {
-    this.manageGameSocketSvc.id = '';
-    this.router.navigateByUrl('/signon');
+    console.log(`ScabbleComponent:OnInit - calling startGame with pl=${player} gm=${id}`);
+    this.gameSvc.startGame(player, id);
   }
 }

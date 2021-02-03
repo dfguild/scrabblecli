@@ -48,14 +48,13 @@ export class Game {
     console.log(`GameService:processDTO with ${JSON.stringify(gmDTO)}`);
     if (gmDTO.id != this.id) {
       console.log('not an update for current game, ignoring DTO');
-      return;  // update for different game;
-    }
-    if (gmDTO.totalMoves != 0 && gmDTO.totalMoves <= this.turnState.totalMoves) {
+    } else if (gmDTO.totalMoves > this.turnState.totalMoves || this.initialLoad) {
+      //new or initial move
+      this.processGameMoveDTO(gmDTO);
+    } else {
       console.log('not a new move, ignoring DTO');
       this.mvSocketService.totalMovesReceived = gmDTO.totalMoves; //tell socket service we got our message
-      return; // No need to process
     }
-    this.processGameMoveDTO(gmDTO);
   }
 
   private processGameMoveDTO(gmDTO: GameDTO) {
@@ -123,11 +122,18 @@ export class Game {
   }
 
   public resetState() {
-    this.updateTurnState();
-    this.grid.map(r => r.map(s => s.letter=''));
+    this.playerName = '';
+    this.gameName = '';
+    this.id = '';
+
     this.lastMove = [];
-    this.players=[];
+    this.preMoveGameDTO = {} as GameDTO;
+    this.passCounter = 0;
+    this.initialLoad = false;
+    this.grid.map(r => r.map(s => s.letter=''));
     this.tileRack = [];
+    this.turnState = new TurnState();
+    this.players=[];
     this.updateGrid();
     this.updateTurnState();
     this.updateTileRack();

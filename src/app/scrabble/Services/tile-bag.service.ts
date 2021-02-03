@@ -10,6 +10,10 @@ export class TileBagService {
 
   constructor() { }
 
+  resetTileBag() {
+    this.tileBag = [];
+  }
+
   getTiles(tileRack: Square[]): Square[] {
     let numTile = Math.min(7 - this.getNumTiles(tileRack), this.tileBag.length);
     console.log(`TileBag:getTiles - getting ${numTile} tiles`)

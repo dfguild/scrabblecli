@@ -55,6 +55,8 @@ export class GameService {
 
   startGame(player: string, id: string) {
     this.game.resetState();
+    this.mvHandlerService.resetMoveState();
+    this.tileBagService.resetTileBag();
     this.game.initialLoad = true;
     this.game.playerName = player;
     this.game.id = id;
