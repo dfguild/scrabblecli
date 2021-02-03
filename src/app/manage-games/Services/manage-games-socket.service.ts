@@ -44,6 +44,7 @@ export class ManageGamesSocketService {
   }
 
   onExit() {
+    console.log('ManageGamesSocketSvc:onExit');
     this.socket.removeListener('connect');
   }
 

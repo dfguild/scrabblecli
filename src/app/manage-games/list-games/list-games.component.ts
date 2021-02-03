@@ -42,6 +42,7 @@ export class ListGamesComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log('ListGamesComponent:ngOnDestroy');
     this.subscription?.unsubscribe();
     this.manageGamesSvc.onExit();
   }
@@ -102,6 +103,7 @@ export class ListGamesComponent implements OnDestroy {
       this.joinGame(id);
     }
 
+    this.ngOnDestroy();
     this.router.navigateByUrl('/scrabble');
   }
 
