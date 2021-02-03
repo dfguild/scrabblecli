@@ -215,7 +215,7 @@ export class MoveHandlerService {
     if (this.words.length === 0) { throw new Error('No valid words played')};
     for ( let w of this.words) {
       console.log(`MoveHandler:checkWords - checking: ${w.text}`)
-      if (!WordList.hasOwnProperty(w.text.toLowerCase())) {
+      if (!WordList.hasOwnProperty(w.text.toUpperCase())) {
         console.log(`MoveHandler:checkWords - ${w.text} invalid`)
         invalidWords.push(w.text);
       }

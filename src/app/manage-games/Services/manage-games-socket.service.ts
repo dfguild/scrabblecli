@@ -28,10 +28,7 @@ export class ManageGamesSocketService {
     this.socketSvc.waitForSocket().then(_ => {
       this.socket.on('connect', () => {
         console.log('ManageGamesSocketSvc:Connect Callback fired');
-        if (this.id) {
-          console.log('calling getGames');
-          this.getGames();
-        }
+        this.getGames();
       });
     });
   }
