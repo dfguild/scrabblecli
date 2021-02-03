@@ -22,15 +22,7 @@ export class ManageGamesSocketService {
   ) {
     console.log(`ManageGamesSocketSvc:constructor Calling setup socket`);
     this.setUpSocket();
-    this.socketReady$ = this.socketSvc.socketReady$;
-
-    // Set up connect callback to rejoin room upon connect/reconnect
-    this.socketSvc.waitForSocket().then(_ => {
-      this.socket.on('connect', () => {
-        console.log('ManageGamesSocketSvc:Connect Callback fired');
-        this.getGames();
-      });
-    });
+    this.socketReady$ = this.socketSvc.socketReady$;    
   }
 
   async setUpSocket() {
@@ -38,6 +30,17 @@ export class ManageGamesSocketService {
     this.socketSvc.socket$.subscribe(s => this.socket = s);
     await this.socketSvc.waitForSocket();
     console.log(`ManageGamesSocketSvc:setUpSocket exiting socket=${this.socket}`);
+  }
+
+  setupConnectListener() {
+    console.log('ManageGamesSocketSvc:registering listener on connect');
+    // Set up connect callback to rejoin room upon connect/reconnect
+    this.socketSvc.waitForSocket().then(_ => {
+      this.socket.on('connect', () => {
+        console.log('ManageGamesSocketSvc:Connect Callback fired');
+        this.getGames();
+      });
+    });
   }
 
   onExit() {
@@ -70,6 +73,8 @@ export class ManageGamesSocketService {
       console.log(`ManageGamesSocketService:getGames -- socket returned - sending event 'getGames'`);
       this.socket.emit('getGames');
       });
+
+    this.setupConnectListener();  //Just in case socket connection is closed - forces a new call to getGames and room reregister
   }
 
   getGames$(): Observable<GameListDTO> {
