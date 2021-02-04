@@ -117,7 +117,11 @@ export class DragDropService {
   createMessage() {
     try {
       const score = this.mvSvc.processTileDrop();
-      this.gm.turnState.gameMessage = `${score} points`;
+      if (score) {
+        this.gm.turnState.gameMessage = `${score} points`;
+      } else {
+        this.gm.turnState.gameMessage = '';
+      }
     } catch(e) {
       if (e instanceof Error) {
         this.gm.turnState.gameMessage = e.message;
