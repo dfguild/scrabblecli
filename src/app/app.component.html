@@ -1,5 +1,5 @@
 <div id="app" class="d-flex flex-column h-100">
-  <div class="container" *ngIf="auth.isLoading$ | async; else loaded">
+  <div class="loadingContainer" *ngIf="auth.isLoading$ | async; else loaded">
     <app-loading></app-loading>
   </div>
 

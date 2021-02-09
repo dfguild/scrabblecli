@@ -47,6 +47,7 @@ export class DragDropService {
       this.gm.updateTileRack();
       this.gm.updateGrid();
       this.mvSvc.currentMove.push(this.gm.grid[toRow][toCol]);
+      this.createMessage();
 
     } else if ( fromSource === "BD" && toSource === 'BD'){
       if (!this.gm.turnState.myTurn) return;
@@ -57,6 +58,7 @@ export class DragDropService {
       this.gm.updateGrid();
       this.mvSvc.currentMove.push(this.gm.grid[toRow][toCol]);
       this.mvSvc.currentMove = this.removeTile(this.mvSvc.currentMove, fromRow, fromCol);
+      this.createMessage();
 
     } else if ( fromSource === "BD" && toSource === 'TR') {
       let letter = this.gm.grid[fromRow][fromCol].letter[0]; // reset to blank if ? + Letter
@@ -67,8 +69,8 @@ export class DragDropService {
       this.gm.updateTileRack();
       this.gm.updateGrid();
       this.mvSvc.currentMove = this.removeTile(this.mvSvc.currentMove, fromRow, fromCol);
+      this.createMessage();
     }
-    this.createMessage();
     this.mvSvc.currentMove.map(s=>console.log(`sq: ${s.letter}-${s.row}-${s.col} `));
   }
 

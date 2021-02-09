@@ -78,7 +78,8 @@ export class MoveHandlerService {
   }
 
   private totalScore(): number {
-    return (this.words.length > 0) ? this.words.map(o=>o.score).reduce((a, b) => a+b) : 0;
+    return ((this.words.length > 0) ? this.words.map(o=>o.score).reduce((a, b) => a+b) : 0) +
+      ((this.currentMove.length === 7) ? 50 : 0);
   }
 
   private setMoveDirection(): void {
@@ -176,7 +177,6 @@ export class MoveHandlerService {
     }
     console.log(`MoveHandler:scoreWord - multiplying ${word.score} by ${wordBonusMultiplier}`)
     word.score *= wordBonusMultiplier;
-    word.score += (this.currentMove.length === 7) ? 50 : 0;
     return word;
   }
 

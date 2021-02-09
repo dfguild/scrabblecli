@@ -1,4 +1,3 @@
-mat-spinner {
-  margin: 0 auto;
-  margin-top: 40%;
+.mat-progress-spinner circle, .mat-spinner circle  {
+  stroke: #afc7e4;
 }
